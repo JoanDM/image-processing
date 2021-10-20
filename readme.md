@@ -1,23 +1,22 @@
-# Python repo template
+# Image processing
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Python 3.8.7=0](https://img.shields.io/badge/python-3.8.7-blue.svg)](https://www.python.org/downloads/release/python-380/)
 
-Repository template used for python projects. To make it work, replace `{name of your repo}` with your target repository name in the following files:
-* readme.md
-* .env
-* .env.leave
+Set of tools used for handy image processing workflows such as:
+* Extracting frames from videos
+* Labelling sequences of frames
 
 # QuickStart: One-time setup
 
 Before anything, you must have pyenv installed in order to run the scripts smoothly.
 [How to setup pyenv](#pyenv-guide-for-handling-multiple-python-versions-in-your-mac)
 
-In case you have autoenv installed, the repo should get automatically set up as soon as you `cd {name of your repo}`. :crystal_ball:
+In case you have autoenv installed, the repo should get automatically set up as soon as you `cd image_processing`. :crystal_ball:
 [How to setup autoenv](#guide-for-ultimate-repository-setup-with-autoenv)
 
 In case you don't have autoenv, you can also manually set up the environment by running:
 ```bash
-cd {name of your repo}
+cd image_processing
 python -mvenv venv
 source venv/bin/activate
 pip install --upgrade pip setuptools wheel
@@ -89,14 +88,14 @@ $ pyenv install 3.8.7
 When running Python via pyenv, you might get an error such as:
 ```shell
 $ python
-version `3.8.7' is not installed (set by /some-path/{name of your repo}/.python-version)
+version `3.8.7' is not installed (set by /some-path/image_processing/.python-version)
 ```
 This could mean that the recommended Python version for this repository has been changed and you don't yet have it installed. 
 You can easily install it using ```pyenv install [version]```. You will also have to recreate your virtual environment.
 
 How to check the Python version used in the repository
 ```shell
-$ cd {name of your repo}
+$ cd image_processing
 $ python --version
 Python 3.7.10
 ```
@@ -111,7 +110,7 @@ $ cd some-random-dir
 $ python --version
 Python 3.8.7
 $ # but this will not affect the local version
-$ cd {name of your repo}
+$ cd image_processing
 $ python --version
 Python 3.7.10
 ```
