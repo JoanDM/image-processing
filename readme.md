@@ -4,7 +4,7 @@
 
 Set of tools used for handy image processing workflows such as:
 * Extracting frames from videos
-* Labelling sequences of frames
+* Labeling sequences of frames
 
 # QuickStart: One-time setup
 
