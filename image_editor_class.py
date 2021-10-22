@@ -4,7 +4,7 @@ import cv2
 import tqdm
 from PIL import Image, ImageDraw, ImageFont
 
-from config import _results_dir_pathlib
+from config import _tmp_dir_pathlib, prRed
 
 
 class ImageEditor(object):
@@ -62,6 +62,15 @@ class ImageEditor(object):
 
         self.current_img.thumbnail(size, Image.ANTIALIAS)
 
+    def cleanup_tmp_dir(self):
+        try:
+            [f.unlink() for f in _tmp_dir_pathlib.glob("*") if f.is_file()]
+        except PermissionError:
+            prRed(
+                f"Error when cleaning up {_tmp_dir_pathlib} "
+                f"Check Full Disk Access settings on Mac"
+            )
+
     def extract_frames_from_video(self, path_to_video, frame_prefix=""):
 
         vidcap = cv2.VideoCapture(str(path_to_video))
@@ -90,23 +99,3 @@ class ImageEditor(object):
             success, image = vidcap.read()
             cv2.imwrite(str(file_name), image)
             count += 1
-
-
-if __name__ == "__main__":
-    img_path = Path(
-        "/Users/joandomenech/terry-the-robot/captured_images/2021-10-19/ios/fixed_focus_sharp_seq copy"
-    )
-
-    target_path = _results_dir_pathlib / "test_res"
-
-    editor = ImageEditor(target_path)
-
-    editor.set_current_img(img_path)
-
-    editor.insert_rectangle_to_image(
-        x_coord=0, y_coord=0, rectangle_height=300, rectangle_width=700
-    )
-
-    editor.insert_text_to_image(text=f"Frame #200\n2.333 seconds")
-
-    editor.save_current_img(target_file_name="test")
