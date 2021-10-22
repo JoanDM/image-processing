@@ -3,6 +3,8 @@ from pathlib import Path
 import cv2
 import tqdm
 
+from config import prGreen
+
 
 class VideoEditor(object):
     def __init__(self, target_directory):
@@ -38,3 +40,4 @@ class VideoEditor(object):
         for i in tqdm.tqdm(range(len(img_array))):
             out.write(img_array[i])
         out.release()
+        prGreen(f"\n Done, video stored in {target_video_path}")
