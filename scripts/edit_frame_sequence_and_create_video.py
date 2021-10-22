@@ -29,7 +29,7 @@ def edit_frame_sequence_and_create_video(path_to_directory_with_frames, video_na
             text=f"Frame #{i + 1}\n{round(i * 0.0333333, 3)} seconds"
         )
         image_editor.resize_image((1280, 720))
-        image_editor.save_current_img(target_file_name=f"{str(i).zfill(3)}")
+        image_editor.save_current_img(target_file_name=f"{str(i).zfill(8)}")
 
     video_editor.create_video_from_frames_in_dir(
         path_to_directory=target_directory_for_frames,

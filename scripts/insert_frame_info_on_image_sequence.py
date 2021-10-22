@@ -25,7 +25,7 @@ def insert_frame_info_on_image_sequence_in_dir(
             text=f"Frame #{i+1}\n{round(i*0.0333333,3)} seconds"
         )
 
-        editor.save_current_img(target_file_name=f"{str(i).zfill(3)}")
+        editor.save_current_img(target_file_name=f"{str(i).zfill(8)}")
 
 
 if __name__ == "__main__":

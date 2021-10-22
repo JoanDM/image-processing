@@ -25,7 +25,9 @@ class VideoEditor(object):
         img_array = []
 
         print("\nFetching images...")
-        for file_path in tqdm.tqdm(list_of_files):
+        for _, file_path in tqdm.tqdm(
+            enumerate(list_of_files), total=len(list_of_files)
+        ):
             img = cv2.imread(str(file_path))
             height, width, layers = img.shape
             size = (width, height)
@@ -33,7 +35,7 @@ class VideoEditor(object):
 
         target_video_path = self.target_directory / f"{target_video_name}.mp4"
         out = cv2.VideoWriter(
-            str(target_video_path), cv2.VideoWriter_fourcc(*"DIVX"), fps, size
+            str(target_video_path), cv2.VideoWriter_fourcc(*"MP4V"), fps, size
         )
 
         print("\nConstructing video...")
