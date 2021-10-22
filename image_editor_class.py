@@ -56,6 +56,10 @@ class ImageEditor(object):
         font = ImageFont.truetype("/Library/fonts/Arial.ttf", size)
         draw.text((10, 10), text, color, font=font)
 
+    def resize_image(self, size):
+
+        self.current_img.thumbnail(size, Image.ANTIALIAS)
+
 
 if __name__ == "__main__":
     img_path = Path(
