@@ -38,7 +38,8 @@ def extract_frames_from_video(path_to_video, target_directory, frame_prefix=""):
 
 
 if __name__ == "__main__":
-    path_to_video = Path("/Users/joandomenech/Downloads/20211020_181459.mp4")
-    target_dir = _results_dir_pathlib / "test_video_2"
+    path_to_video = Path("path_to_video")
 
-    extract_frames_from_video(path_to_video, target_dir, frame_prefix="test")
+    target_dir = _results_dir_pathlib / "user_defined_directory_to_store_frames"
+
+    extract_frames_from_video(path_to_video, target_dir)

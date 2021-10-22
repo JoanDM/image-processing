@@ -29,8 +29,8 @@ def insert_frame_info_on_image_sequence_in_dir(
 
 
 if __name__ == "__main__":
-    dir_path = Path("/Users/joandomenech/image_editor/results/test_video_2")
+    dir_path = Path("path_to_directory_with_images")
 
-    target_directory = _results_dir_pathlib / "video_results_2"
+    target_directory = _results_dir_pathlib / "user_defined_directory_to_store_frames"
 
     insert_frame_info_on_image_sequence_in_dir(dir_path, target_directory)
