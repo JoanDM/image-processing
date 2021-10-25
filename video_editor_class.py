@@ -35,7 +35,7 @@ class VideoEditor(object):
 
         target_video_path = self.target_directory / f"{target_video_name}.mp4"
         out = cv2.VideoWriter(
-            str(target_video_path), cv2.VideoWriter_fourcc(*"MP4V"), fps, size
+            str(target_video_path), cv2.VideoWriter_fourcc(*"avc1"), fps, size
         )
 
         print("\nConstructing video...")
