@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import cv2
-import tqdm
 from PIL import Image, ImageDraw, ImageFont
 
 from config import _tmp_dir_pathlib, prRed
@@ -52,11 +50,14 @@ class ImageEditor(object):
             width=outline_width,
         )
 
-    def insert_text_to_image(self, text=None, color="white", size=100):
+    def insert_text_to_image(
+        self, text=None, color="white", font_size=100, position=(10, 10)
+    ):
         draw = ImageDraw.Draw(self.current_img)
 
-        font = ImageFont.truetype("/Library/fonts/Arial.ttf", size)
-        draw.text((10, 10), text, color, font=font)
+        font = ImageFont.truetype("/Library/fonts/Arial.ttf", font_size)
+
+        draw.text(position, text, color, font=font)
 
     def resize_image(self, size):
 
@@ -70,32 +71,3 @@ class ImageEditor(object):
                 f"Error when cleaning up {_tmp_dir_pathlib} "
                 f"Check Full Disk Access settings on Mac"
             )
-
-    def extract_frames_from_video(self, path_to_video, frame_prefix=""):
-
-        vidcap = cv2.VideoCapture(str(path_to_video))
-
-        count = 0
-
-        # Loop through the video to get the number of frames
-        total_number_of_frames = 0
-        while vidcap.isOpened():
-            frame_exists, frame = vidcap.read()
-            if frame_exists:
-                total_number_of_frames += 1
-            else:
-                break
-
-        vidcap = cv2.VideoCapture(str(path_to_video))
-
-        print(
-            f"\nExtracting {total_number_of_frames} frames from {path_to_video} to {self.target_directory}..."
-        )
-        for _ in tqdm.tqdm(range(total_number_of_frames)):
-            file_name = (
-                self.target_directory
-                / f"{f'{frame_prefix}_' if frame_prefix else ''}{str(count).zfill(4)}.png"
-            )
-            success, image = vidcap.read()
-            cv2.imwrite(str(file_name), image)
-            count += 1

@@ -7,7 +7,7 @@ if __name__ == "__main__":
     path_to_dir = Path("path_to_directory_with_sequence_of_frames")
     target_dir = _results_dir_pathlib / "user_defined_directory_to_store_video"
     video_name = "user_defined_video_name_without_extension"
-    frame_rate = 0.5
+    frame_rate = 2
 
     video_editor = VideoEditor(target_directory=target_dir)
 

@@ -7,8 +7,10 @@ from image_editor_class import ImageEditor
 
 
 def insert_frame_info_on_image_sequence_in_dir(
-    path_to_directory, target_directory=None
+    path_to_directory, target_directory=None, fps=None
 ):
+    if fps is None:
+        fps = 30.0
     editor = ImageEditor(target_directory)
     list_of_files = sorted(path_to_directory.glob("*.png"))
 
@@ -21,9 +23,7 @@ def insert_frame_info_on_image_sequence_in_dir(
             rectangle_width=700,
         )
 
-        editor.insert_text_to_image(
-            text=f"Frame #{i+1}\n{round(i*0.0333333,3)} seconds"
-        )
+        editor.insert_text_to_image(text=f"Frame #{i+1}\n{round(i*(1/fps),3)} seconds")
 
         editor.save_current_img(target_file_name=f"{str(i).zfill(8)}")
 

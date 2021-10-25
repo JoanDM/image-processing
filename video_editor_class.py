@@ -3,14 +3,12 @@ from pathlib import Path
 import cv2
 import tqdm
 
-from config import prGreen
+from config import _tmp_dir_pathlib, prGreen, prRed
 
 
 class VideoEditor(object):
     def __init__(self, target_directory):
         self.set_target_directory(target_directory)
-        self.current_video = None
-        self.current_video_path = None
 
     def set_target_directory(self, target_directory):
         self.target_directory = Path(str(target_directory))
@@ -43,3 +41,46 @@ class VideoEditor(object):
             out.write(img_array[i])
         out.release()
         prGreen(f"\n Done, video stored in {target_video_path}")
+
+    def extract_frames_from_video(self, path_to_video, frame_prefix=""):
+
+        vidcap = cv2.VideoCapture(str(path_to_video))
+
+        fps = vidcap.get(cv2.CAP_PROP_FPS)
+
+        count = 0
+
+        # Loop through the video to get the number of frames
+        total_number_of_frames = 0
+        while vidcap.isOpened():
+            frame_exists, frame = vidcap.read()
+            if frame_exists:
+                total_number_of_frames += 1
+            else:
+                break
+
+        vidcap = cv2.VideoCapture(str(path_to_video))
+
+        print(
+            f"\nExtracting {total_number_of_frames} frames from {path_to_video} to {self.target_directory}..."
+        )
+        print(f"Video frame rate is {fps}")
+        for _ in tqdm.tqdm(range(total_number_of_frames)):
+            file_name = (
+                self.target_directory
+                / f"{f'{frame_prefix}_' if frame_prefix else ''}{str(count).zfill(8)}.png"
+            )
+            success, image = vidcap.read()
+            cv2.imwrite(str(file_name), image)
+            count += 1
+
+        return fps
+
+    def cleanup_tmp_dir(self):
+        try:
+            [f.unlink() for f in _tmp_dir_pathlib.glob("*") if f.is_file()]
+        except PermissionError:
+            prRed(
+                f"Error when cleaning up {_tmp_dir_pathlib} "
+                f"Check Full Disk Access settings on Mac"
+            )
