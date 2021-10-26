@@ -10,7 +10,7 @@ from video_editor_class import VideoEditor
 def extract_and_edit_frames_from_video_sequence(path_to_video, target_directory):
     video_editor = VideoEditor(_tmp_dir_pathlib)
 
-    video_fps = VideoEditor.extract_frames_from_video(path_to_video)
+    video_fps = video_editor.extract_frames_from_video(path_to_video)
 
     print("\nEditing frames...")
 
