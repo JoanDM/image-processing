@@ -12,7 +12,7 @@ def extract_and_edit_frames_from_video_sequence(path_to_video, target_directory)
 
     video_fps = video_editor.extract_frames_from_video(path_to_video)
 
-    print("\nEditing frames...")
+    print(f"\nEditing frames... Frames will be saved in {target_directory}")
 
     list_of_files = sorted(video_editor.target_directory.glob("*.png"))
 
