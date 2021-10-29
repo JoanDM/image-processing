@@ -16,14 +16,11 @@ def insert_frame_info_on_image_sequence_in_dir(
 
     for i, file_path in tqdm.tqdm(enumerate(list_of_files), total=len(list_of_files)):
         editor.set_current_img(path_to_image=file_path)
-        editor.insert_rectangle_to_image(
-            x_coord=0,
-            y_coord=0,
-            rectangle_height=300,
-            rectangle_width=700,
-        )
 
-        editor.insert_text_to_image(text=f"Frame #{i+1}\n{round(i*(1/fps),3)} seconds")
+        editor.insert_text_to_current_img(
+            text=f"Frame #{i + 1}\n{round(i * (1 / fps), 3):.3f} seconds",
+            use_black_background=True,
+        )
 
         editor.save_current_img(target_file_name=f"{str(i).zfill(8)}")
 

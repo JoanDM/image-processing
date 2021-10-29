@@ -25,7 +25,7 @@ class ImageEditor(object):
         )
         self.current_img.save(target_file_path)
 
-    def insert_rectangle_to_image(
+    def insert_rectangle_to_current_img(
         self,
         rectangle_fill_color="black",
         x_coord=None,
@@ -50,18 +50,35 @@ class ImageEditor(object):
             width=outline_width,
         )
 
-    def insert_text_to_image(
-        self, text=None, color="white", font_size=100, position=(10, 10)
+    def insert_text_to_current_img(
+        self,
+        text=None,
+        color="white",
+        font_size=100,
+        position=(10, 10),
+        use_black_background=False,
     ):
         draw = ImageDraw.Draw(self.current_img)
 
         font = ImageFont.truetype("/Library/fonts/Arial.ttf", font_size)
 
+        if use_black_background:
+            quiet_zone = 50
+            w, h = draw.textsize(text, font)
+
+            self.insert_rectangle_to_current_img(
+                rectangle_fill_color="black",
+                x_coord=position[0] - quiet_zone,
+                y_coord=position[1] - quiet_zone,
+                rectangle_height=h + quiet_zone * 2,
+                rectangle_width=w + quiet_zone * 2,
+            )
+
         draw.text(position, text, color, font=font)
 
-    def resize_image(self, size):
+    def resize_current_image(self, size):
 
-        self.current_img.thumbnail(size, Image.ANTIALIAS)
+        self.current_img = self.current_img.resize(size, Image.ANTIALIAS)
 
     def cleanup_tmp_dir(self):
         try:

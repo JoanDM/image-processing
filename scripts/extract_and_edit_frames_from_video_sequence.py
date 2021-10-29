@@ -20,17 +20,17 @@ def extract_and_edit_frames_from_video_sequence(path_to_video, target_directory)
 
     for i, file_path in tqdm.tqdm(enumerate(list_of_files), total=len(list_of_files)):
         image_editor.set_current_img(path_to_image=file_path)
-        image_editor.insert_rectangle_to_image(
+        image_editor.insert_rectangle_to_current_img(
             x_coord=0,
             y_coord=0,
             rectangle_height=300,
             rectangle_width=700,
         )
 
-        image_editor.insert_text_to_image(
+        image_editor.insert_text_to_current_img(
             text=f"Frame #{i + 1}\n{round(i * (1/video_fps), 3)} seconds"
         )
-        image_editor.resize_image((1280, 720))
+        image_editor.resize_current_image((1280, 720))
         image_editor.save_current_img(target_file_name=f"{str(i).zfill(8)}")
 
     video_editor.cleanup_tmp_dir()

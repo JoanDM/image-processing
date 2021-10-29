@@ -12,7 +12,7 @@ def resize_frames_in_dir(path_to_directory, target_directory, size):
 
     for i, file_path in tqdm.tqdm(enumerate(list_of_files), total=len(list_of_files)):
         editor.set_current_img(path_to_image=file_path)
-        editor.resize_image(size)
+        editor.resize_current_image(size)
         editor.save_current_img(target_file_name=f"{str(i).zfill(8)}")
 
 
