@@ -10,6 +10,7 @@ class ImageEditor(object):
         self.set_target_directory(target_directory)
         self.current_img = None
         self.current_img_path = None
+        self.current_img_name = None
 
     def set_target_directory(self, target_directory):
         self.target_directory = Path(str(target_directory))
@@ -18,6 +19,7 @@ class ImageEditor(object):
     def set_current_img(self, path_to_image):
         self.current_img_path = path_to_image
         self.current_img = Image.open(path_to_image)
+        self.current_img_name = self.current_img_path.stem
 
     def save_current_img(self, target_file_name):
         target_file_path = (
@@ -88,3 +90,17 @@ class ImageEditor(object):
                 f"Error when cleaning up {_tmp_dir_pathlib} "
                 f"Check Full Disk Access settings on Mac"
             )
+
+    def create_side_by_side_image_composition(
+        self, path_to_left_side_image, path_to_right_side_image
+    ):
+
+        image1 = Image.open(path_to_left_side_image)
+        image2 = Image.open(path_to_right_side_image)
+
+        image1_size = image1.size
+
+        self.resize_current_image((2 * image1_size[0], image1_size[1]))
+
+        self.current_img.paste(image1, (0, 0))
+        self.current_img.paste(image2, (image1_size[0], 0))
