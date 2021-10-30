@@ -15,7 +15,12 @@ class VideoEditor(object):
         target_directory.mkdir(parents=True, exist_ok=True)
 
     def create_video_from_frames_in_dir(
-        self, path_to_directory, target_video_name, fps
+        self,
+        path_to_directory,
+        target_video_name,
+        fps,
+        freeze_final_frame=False,
+        seconds_freezing_frame=2,
     ):
 
         list_of_files = sorted(path_to_directory.glob("*.png"))
@@ -31,15 +36,24 @@ class VideoEditor(object):
             size = (width, height)
             img_array.append(img)
 
+        if freeze_final_frame:
+            for _ in range(seconds_freezing_frame * fps):
+                img_array.append(img)
+
         target_video_path = self.target_directory / f"{target_video_name}.mp4"
         out = cv2.VideoWriter(
-            str(target_video_path), cv2.VideoWriter_fourcc(*"avc1"), fps, size
+            str(target_video_path),
+            cv2.VideoWriter_fourcc(*"avc1"),
+            fps,
+            size,
+            isColor=True,
         )
 
         print("\nConstructing video...")
         for i in tqdm.tqdm(range(len(img_array))):
             out.write(img_array[i])
         out.release()
+
         prGreen(f"\n Done, video stored in {target_video_path}")
 
     def extract_frames_from_video(self, path_to_video, frame_prefix=""):

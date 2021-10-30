@@ -12,5 +12,8 @@ if __name__ == "__main__":
     video_editor = VideoEditor(target_directory=target_dir)
 
     video_editor.create_video_from_frames_in_dir(
-        path_to_directory=path_to_dir, target_video_name=video_name, fps=frame_rate
+        path_to_directory=path_to_dir,
+        target_video_name=video_name,
+        fps=frame_rate,
+        freeze_final_frame=True,
     )
