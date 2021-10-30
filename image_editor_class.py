@@ -21,6 +21,11 @@ class ImageEditor(object):
         self.current_img = Image.open(path_to_image)
         self.current_img_name = self.current_img_path.stem
 
+    def create_and_set_blank_image_as_current(self):
+        self.current_img = Image.new("RGB", (1, 1), (250, 250, 250))
+        self.current_img_path = self.target_directory / f"new_blank_image.png"
+        self.current_img_name = self.current_img_path.stem
+
     def save_current_img(self, target_file_name):
         target_file_path = (
             self.target_directory / f"{target_file_name}{self.current_img_path.suffix}"
