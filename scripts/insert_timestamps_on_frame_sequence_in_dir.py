@@ -6,7 +6,7 @@ from config import _results_dir_pathlib
 from image_editor_class import ImageEditor
 
 
-def insert_frame_info_on_image_sequence_in_dir(
+def insert_timestamps_on_frame_sequence_in_dir(
     path_to_directory, target_directory=None, fps=None
 ):
     if fps is None:
@@ -30,4 +30,4 @@ if __name__ == "__main__":
 
     target_directory = _results_dir_pathlib / "user_defined_directory_to_store_frames"
 
-    insert_frame_info_on_image_sequence_in_dir(dir_path, target_directory)
+    insert_timestamps_on_frame_sequence_in_dir(dir_path, target_directory)

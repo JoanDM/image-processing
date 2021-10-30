@@ -7,7 +7,7 @@ from image_editor_class import ImageEditor
 from video_editor_class import VideoEditor
 
 
-def extract_and_edit_frames_from_video_sequence(path_to_video, target_directory):
+def extract_frames_and_insert_timestamps_from_video(path_to_video, target_directory):
     video_editor = VideoEditor(_tmp_dir_pathlib)
 
     video_fps = video_editor.extract_frames_from_video(path_to_video)
@@ -42,4 +42,4 @@ if __name__ == "__main__":
 
     target_directory = Path(_results_dir_pathlib / f"user_defined_target_directory")
 
-    extract_and_edit_frames_from_video_sequence(dir_path_to_video, target_directory)
+    extract_frames_and_insert_timestamps_from_video(dir_path_to_video, target_directory)
