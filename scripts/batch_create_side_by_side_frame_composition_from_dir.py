@@ -1,0 +1,43 @@
+from pathlib import Path
+
+import tqdm
+
+from config import _results_dir_pathlib
+from image_editor_class import ImageEditor
+
+
+def batch_create_side_by_side_frame_composition_from_dir(
+    target_directory,
+    path_to_frames_in_comp_left_side,
+    path_to_frames_in_comp_right_side,
+):
+
+    editor = ImageEditor(target_directory)
+    list_of_left_comp_files = sorted(path_to_frames_in_comp_left_side.glob("*.png"))
+    list_of_right_comp_files = sorted(path_to_frames_in_comp_right_side.glob("*.png"))
+
+    number_of_files = len(list_of_left_comp_files)
+
+    for i, left_image_path, right_image_path in tqdm.tqdm(
+        zip(range(number_of_files), list_of_left_comp_files, list_of_right_comp_files),
+        total=number_of_files,
+    ):
+
+        editor.create_and_set_blank_image_as_current()
+
+        editor.create_side_by_side_image_composition(left_image_path, right_image_path)
+
+        editor.save_current_img(target_file_name=f"{str(i).zfill(8)}")
+
+
+if __name__ == "__main__":
+    path_to_frames_in_comp_left_side = Path("path_to_frames_in_comp_left_side")
+    path_to_frames_in_comp_right_side = Path("path_to_frames_in_comp_right_side")
+
+    target_directory = _results_dir_pathlib / "user_defined_target_dir"
+
+    batch_create_side_by_side_frame_composition_from_dir(
+        target_directory,
+        path_to_frames_in_comp_left_side,
+        path_to_frames_in_comp_right_side,
+    )
