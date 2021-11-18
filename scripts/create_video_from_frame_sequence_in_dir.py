@@ -11,13 +11,20 @@ if __name__ == "__main__":
     parser.add_argument(
         "dir", nargs="?", help="directory containing sequence of frames"
     )
+    parser.add_argument("tdir", nargs="?", help="target dir to store video")
     args = parser.parse_args()
 
     directory = args.dir
 
+    target_dir = args.tdir
+
     if directory is not None:
         path_to_dir = Path(directory)
-        target_dir = _results_dir_pathlib / "user_defined_directory_to_store_video"
+        if target_dir is not None:
+            target_dir = Path(target_dir)
+        else:
+            target_dir = path_to_dir.parents[0] / f"{path_to_dir.stem}_video"
+
         video_name = path_to_dir.stem
         frame_rate = 15
 
