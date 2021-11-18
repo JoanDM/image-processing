@@ -40,6 +40,7 @@ if __name__ == "__main__":
         path_to_directory=path_to_dir,
         target_video_name=video_name,
         fps=frame_rate,
-        freeze_final_frame=True,
-        seconds_freezing_frame=1,
+        frames_to_freeze=[],
+        freeze_last_frame=True,
+        seconds_freezing_frame=2,
     )
