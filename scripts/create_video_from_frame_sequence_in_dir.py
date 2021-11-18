@@ -26,13 +26,13 @@ if __name__ == "__main__":
             target_dir = path_to_dir.parents[0] / f"{path_to_dir.stem}_video"
 
         video_name = path_to_dir.stem
-        frame_rate = 15
+        frame_rate = 5
 
     else:
         path_to_dir = Path("path_to_directory_with_sequence_of_frames")
         target_dir = _results_dir_pathlib / "user_defined_directory_to_store_video"
         video_name = "user_defined_video_name_without_extension"
-        frame_rate = 15
+        frame_rate = 5
 
     video_editor = VideoEditor(target_directory=target_dir)
 
