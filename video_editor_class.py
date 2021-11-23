@@ -26,27 +26,12 @@ class VideoEditor(object):
 
         list_of_files = sorted(path_to_directory.glob("*.png"))
 
-        img_array = []
-
-        print("\nFetching images...")
-        for i, file_path in tqdm.tqdm(
-            enumerate(list_of_files), total=len(list_of_files)
-        ):
-            img = cv2.imread(str(file_path))
-            height, width, layers = img.shape
-            size = (width, height)
-            img_array.append(img)
-
-            if frames_to_freeze:
-                if i in frames_to_freeze:
-                    for _ in range(seconds_freezing_frame * fps):
-                        img_array.append(img)
-
-        if freeze_last_frame:
-            for _ in range(seconds_freezing_frame * fps):
-                img_array.append(img)
+        img = cv2.imread(str(list_of_files[0]))
+        height, width, layers = img.shape
+        size = (width, height)
 
         target_video_path = self.target_directory / f"{target_video_name}.mp4"
+
         out = cv2.VideoWriter(
             str(target_video_path),
             cv2.VideoWriter_fourcc(*"avc1"),
@@ -56,8 +41,23 @@ class VideoEditor(object):
         )
 
         print("\nConstructing video...")
-        for i in tqdm.tqdm(range(len(img_array))):
-            out.write(img_array[i])
+        for i, file_path in tqdm.tqdm(
+            enumerate(list_of_files), total=len(list_of_files)
+        ):
+            img = cv2.imread(str(file_path))
+            height, width, layers = img.shape
+            size = (width, height)
+            out.write(img)
+
+            if frames_to_freeze:
+                if i in frames_to_freeze:
+                    for _ in range(seconds_freezing_frame * fps):
+                        out.write(img)
+
+        if freeze_last_frame:
+            for _ in range(seconds_freezing_frame * fps):
+                out.write(img)
+
         out.release()
 
         prGreen(f"\n Done, video stored in {target_video_path}")
