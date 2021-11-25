@@ -3,4 +3,4 @@ flake8
 pre-commit
 pillow
 tqdm
-opencv-python
+opencv-contrib-python
