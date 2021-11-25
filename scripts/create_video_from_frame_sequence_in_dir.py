@@ -4,6 +4,8 @@ from pathlib import Path
 from config import _results_dir_pathlib
 from video_editor_class import VideoEditor
 
+DEFAULT_FRAME_RATE = 15
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         "Convert a sequence of frames in a directory to a video"
@@ -12,11 +14,14 @@ if __name__ == "__main__":
         "dir", nargs="?", help="directory containing sequence of frames"
     )
     parser.add_argument("tdir", nargs="?", help="target dir to store video")
+    parser.add_argument("fps", nargs="?", help="target video frame rate")
     args = parser.parse_args()
 
     directory = args.dir
 
     target_dir = args.tdir
+
+    frame_rate = args.fps
 
     if directory is not None:
         path_to_dir = Path(directory)
@@ -26,13 +31,17 @@ if __name__ == "__main__":
             target_dir = path_to_dir.parents[0] / f"{path_to_dir.stem}_video"
 
         video_name = path_to_dir.stem
-        frame_rate = 5
+
+        if frame_rate is not None:
+            frame_rate = int(frame_rate)
+        else:
+            frame_rate = DEFAULT_FRAME_RATE
 
     else:
         path_to_dir = Path("path_to_directory_with_sequence_of_frames")
         target_dir = _results_dir_pathlib / "user_defined_directory_to_store_video"
         video_name = "user_defined_video_name_without_extension"
-        frame_rate = 5
+        frame_rate = DEFAULT_FRAME_RATE
 
     video_editor = VideoEditor(target_directory=target_dir)
 
