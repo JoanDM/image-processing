@@ -7,7 +7,11 @@ from image_editor_class import ImageEditor
 
 
 def insert_timestamps_on_frame_sequence_in_dir(
-    path_to_directory, target_directory, dict_with_frame_id_and_message, fps=None
+    path_to_directory,
+    target_directory,
+    dict_with_frame_id_and_message,
+    font_size=20,
+    fps=None,
 ):
     if fps is None:
         fps = 30.0
@@ -30,19 +34,19 @@ def insert_timestamps_on_frame_sequence_in_dir(
         editor.set_current_img(path_to_image=file_path)
 
         time_tracker_str = ""
-        for value in set(dict_with_frame_id_and_message.values()):
+        for value in sorted(set(dict_with_frame_id_and_message.values())):
             try:
-                time_tracker_str += f"\nTotal {value}:{round(time_measurements_tracker[value],3):.3f} seconds"
+                time_tracker_str += f"\nTotal {value}: {round(time_measurements_tracker[value],3):.3f} seconds"
             except KeyError:
-                time_tracker_str += f"\nTotal {value}:{round(0.0, 3):.3f} seconds"
+                time_tracker_str += f"\nTotal {value}: {round(0.0, 3):.3f} seconds"
 
         editor.insert_text_to_current_img(
             text=f"{frame_main_title}...\n"
-            f"Frame #{j + 1} {round(j * (1 / fps), 3):.3f} seconds"
+            f"Frame #{j + 1} -- {round(j * (1 / fps), 3):.3f} seconds"
             f"{time_tracker_str}"
             # f"\nTotal {frame_main_title}:{round(time_measurements_tracker[frame_main_title], 3):.3f} seconds,"
-            f"\nTotal # frames: {i + 1} --- {round(i * (1 / fps), 3):.3f} seconds",
-            font_size=20,
+            f"\nTotal # frames: {i + 1} -- {round(i * (1 / fps), 3):.3f} seconds",
+            font_size=font_size,
             use_black_background=True,
         )
 
@@ -78,6 +82,8 @@ if __name__ == "__main__":
         target_dir = dir_path.parents[0] / f"{dir_path.stem}_edited_frames"
     # target_dir = Path("user_defined_path")
 
+    font_size = 30
+
     insert_timestamps_on_frame_sequence_in_dir(
-        dir_path, target_dir, dict_with_frame_id_and_message
+        dir_path, target_dir, dict_with_frame_id_and_message, font_size
     )
