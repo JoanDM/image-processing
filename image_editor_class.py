@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 from config import _tmp_dir_pathlib, prRed
 
@@ -86,6 +86,9 @@ class ImageEditor(object):
     def resize_current_image(self, size):
 
         self.current_img = self.current_img.resize(size, Image.ANTIALIAS)
+
+    def invert_current_image(self):
+        self.current_img = ImageOps.invert(self.current_img)
 
     def cleanup_tmp_dir(self):
         try:
