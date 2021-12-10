@@ -24,7 +24,7 @@ class ImageEditor(object):
     def create_and_set_blank_image_as_current(
         self, size=(1, 1), format="png", target_filename=None
     ):
-        self.current_img = Image.new("RGB", size, (250, 250, 250))
+        self.current_img = Image.new("RGB", size, (255, 255, 255))
         if target_filename is not None:
             self.current_img_path = (
                 self.target_directory / f"{target_filename}.{format}"
@@ -33,11 +33,21 @@ class ImageEditor(object):
             self.current_img_path = self.target_directory / f"new_blank_image.{format}"
         self.current_img_name = self.current_img_path.stem
 
-    def save_current_img(self, target_file_name):
-        target_file_path = (
-            self.target_directory / f"{target_file_name}{self.current_img_path.suffix}"
-        )
-        self.current_img.save(target_file_path)
+    def save_current_img(self, target_file_name=None, dpi=None):
+        if target_file_name is None:
+            target_file_path = (
+                self.target_directory
+                / f"{self.current_img_name}{self.current_img_path.suffix}"
+            )
+        else:
+            target_file_path = (
+                self.target_directory
+                / f"{target_file_name}{self.current_img_path.suffix}"
+            )
+        if dpi is not None:
+            self.current_img.save(target_file_path, dpi=dpi)
+        else:
+            self.current_img.save(target_file_path)
 
     def insert_rectangle_to_current_img(
         self,
