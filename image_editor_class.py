@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import qrcode
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 from config import _tmp_dir_pathlib, prRed
@@ -25,6 +26,18 @@ class ImageEditor(object):
         self, size=(1, 1), format="png", target_filename=None
     ):
         self.current_img = Image.new("RGB", size, (255, 255, 255))
+        if target_filename is not None:
+            self.current_img_path = (
+                self.target_directory / f"{target_filename}.{format}"
+            )
+        else:
+            self.current_img_path = self.target_directory / f"new_blank_image.{format}"
+        self.current_img_name = self.current_img_path.stem
+
+    def create_and_set_qr_code_image_as_current(
+        self, code_content, format="png", target_filename=None
+    ):
+        self.current_img = qrcode.make(code_content)
         if target_filename is not None:
             self.current_img_path = (
                 self.target_directory / f"{target_filename}.{format}"
