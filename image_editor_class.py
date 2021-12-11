@@ -122,8 +122,20 @@ class ImageEditor(object):
 
         draw.text(position, text, color, font=font)
 
-    def resize_current_image(self, size):
+    def insert_img_to_current_img(
+        self, path_to_img, position, anchor_point="center", resizing_factor=1
+    ):
+        img = Image.open(path_to_img)
+        img_w, img_h = img.size
+        img = img.resize((int(img_h * resizing_factor), int(img_h * resizing_factor)))
+        img_w, img_h = img.size
+        offset = (0, 0)
+        if anchor_point == "center":
+            offset = [-img_w // 2, -img_h // 2]
+        position = [x + y for x, y in zip(offset, position)]
+        self.current_img.paste(img, position)
 
+    def resize_current_image(self, size):
         self.current_img = self.current_img.resize(size, Image.ANTIALIAS)
 
     def invert_current_image(self):
