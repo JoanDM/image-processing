@@ -78,13 +78,22 @@ class ImageEditor(object):
         self,
         text=None,
         color="white",
-        font_size=100,
+        max_width_pix=None,
+        max_font_size=100,
         position=(10, 10),
         use_black_background=False,
     ):
         draw = ImageDraw.Draw(self.current_img)
 
-        font = ImageFont.truetype("/Library/fonts/Arial.ttf", font_size)
+        font = ImageFont.truetype("/Library/fonts/Arial.ttf", max_font_size)
+
+        # This value would override the font size
+        if max_width_pix is not None:
+            w, h = draw.textsize(text, font)
+            while w > max_width_pix:
+                max_font_size -= 5
+                font = ImageFont.truetype("/Library/fonts/Arial.ttf", max_font_size)
+                w, h = draw.textsize(text, font)
 
         if use_black_background:
             quiet_zone = 50
