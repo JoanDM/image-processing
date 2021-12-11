@@ -4,6 +4,7 @@ from pathlib import Path
 _base_dir = os.path.abspath(os.path.dirname(__file__))
 _base_dir_pathlib = Path(_base_dir)
 _results_dir_pathlib = Path(_base_dir) / "results"
+_resources_dir_pathlib = Path(_base_dir) / "resources"
 _tmp_dir_pathlib = _results_dir_pathlib / "tmp"
 
 
