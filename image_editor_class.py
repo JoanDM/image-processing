@@ -3,7 +3,7 @@ from pathlib import Path
 import qrcode
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
-from config import _tmp_dir_pathlib, prRed
+from config import DEFAULT_DPI, _tmp_dir_pathlib, prRed
 
 
 class ImageEditor(object):
@@ -46,7 +46,7 @@ class ImageEditor(object):
             self.current_img_path = self.target_directory / f"new_blank_image.{format}"
         self.current_img_name = self.current_img_path.stem
 
-    def save_current_img(self, target_file_name=None, dpi=None):
+    def save_current_img(self, target_file_name=None, dpi=(DEFAULT_DPI, DEFAULT_DPI)):
         if target_file_name is None:
             target_file_path = (
                 self.target_directory

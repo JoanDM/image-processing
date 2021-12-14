@@ -7,10 +7,14 @@ _results_dir_pathlib = Path(_base_dir) / "results"
 _resources_dir_pathlib = Path(_base_dir) / "resources"
 _tmp_dir_pathlib = _results_dir_pathlib / "tmp"
 
+DEFAULT_DPI = 300
 PRINTER_DPI = 1200
 # For an A4 page, the size in pixels at 300dpi (without bleed area is (3508, 2480)
-A4_PIXEL_WIDTH_300DPI = 3508
-A4_PIXEL_HEIGH_300DPI = 2480
+A4_PIXEL_WIDTH_DEFAULT_DPI = 3508
+A4_PIXEL_HEIGHT_DEFAULT_DPI = 2480
+
+A4_PIXEL_WIDTH_PRINTER = int(A4_PIXEL_WIDTH_DEFAULT_DPI * PRINTER_DPI / DEFAULT_DPI)
+A4_PIXEL_HEIGHT_PRINTER = int(A4_PIXEL_HEIGHT_DEFAULT_DPI * PRINTER_DPI / DEFAULT_DPI)
 
 
 def prRed(skk):
