@@ -92,35 +92,46 @@ class ImageEditor(object):
         text=None,
         color="white",
         max_width_pix=None,
-        max_font_size=100,
-        position=(10, 10),
+        position=None,
         use_black_background=False,
     ):
         draw = ImageDraw.Draw(self.current_img)
 
-        font = ImageFont.truetype("/Library/fonts/Arial.ttf", max_font_size)
+        # Initialize font size
+        font_size = 100
+        font = ImageFont.truetype("/Library/fonts/Arial.ttf", font_size)
+
+        w, h = draw.textsize(text, font)
 
         # This value would override the font size
         if max_width_pix is not None:
-            w, h = draw.textsize(text, font)
-            while w > max_width_pix:
-                max_font_size -= 5
-                font = ImageFont.truetype("/Library/fonts/Arial.ttf", max_font_size)
+            while w >= max_width_pix:
+                font_size -= 1
+                font = ImageFont.truetype("/Library/fonts/Arial.ttf", font_size)
+                w, h = draw.textsize(text, font)
+
+            while w <= max_width_pix:
+                font_size += 1
+                font = ImageFont.truetype("/Library/fonts/Arial.ttf", font_size)
                 w, h = draw.textsize(text, font)
 
         if use_black_background:
-            quiet_zone = 50
-            w, h = draw.textsize(text, font)
+            quiet_zone = int(w * 0.01)
 
             self.insert_rectangle_to_current_img(
                 rectangle_fill_color="black",
                 x_coord=position[0] - quiet_zone,
                 y_coord=position[1] - quiet_zone,
-                rectangle_height=h + quiet_zone * 2,
-                rectangle_width=w + quiet_zone * 2,
+                # rectangle_height=h + quiet_zone * 2,
+                rectangle_height=h,
+                # rectangle_width=w + quiet_zone * 2,
+                rectangle_width=w,
             )
 
-        draw.text(position, text, color, font=font)
+        draw.text(xy=position, text=text, fill=color, font=font)
+
+    def get_current_img_size(self):
+        return self.current_img.size
 
     def insert_img_to_current_img(
         self, path_to_img, position, anchor_point="center", resizing_factor=1

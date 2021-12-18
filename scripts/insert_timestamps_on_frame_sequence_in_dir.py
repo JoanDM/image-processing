@@ -46,7 +46,6 @@ def insert_timestamps_on_frame_sequence_in_dir(
             f"{time_tracker_str}"
             # f"\nTotal {frame_main_title}:{round(time_measurements_tracker[frame_main_title], 3):.3f} seconds,"
             f"\nTotal # frames: {i + 1} -- {round(i * (1 / fps), 3):.3f} seconds",
-            max_font_size=font_size,
             use_black_background=True,
         )
 
