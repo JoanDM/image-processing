@@ -65,7 +65,7 @@ def create_product_labels(
         product_model = product_models[index]
         product_serial_number = product_serial_numbers[index]
         max_text_width_pix = int(label_width_px * 0.75)
-        offset_from_label_corners = label_width_px * 0.02
+        offset_from_label_corners = int(label_width_px * 0.02)
         editor.insert_text_to_current_img(
             text=f"{product_name}\n\nModel: {product_model}\nSN:{product_serial_number}",
             color="black",
@@ -95,6 +95,7 @@ def create_product_labels(
             position=(
                 j * label_width_px
                 + max_text_width_pix
+                + offset_from_label_corners
                 + int(desired_qr_code_width_pix / 2),
                 i * label_height_px + int(label_height_px / 2),
             ),
