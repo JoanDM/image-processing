@@ -1,5 +1,5 @@
 default_language_version:
-  python: python3.8
+  python: python3.9.5
 repos:
   - repo: https://github.com/myint/autoflake
     rev: v1.4
@@ -12,10 +12,11 @@ repos:
             "--ignore-init-module-imports",
           ]
   - repo: https://github.com/psf/black
-    rev: 20.8b1
+    rev: 21.12b0
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/isort
-    rev: 5.7.0
+    rev: 5.10.1
     hooks:
       - id: isort
+        args: ["--profile", "black"]

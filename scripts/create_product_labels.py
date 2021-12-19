@@ -1,6 +1,11 @@
-from config import (A4_PIXEL_HEIGHT_DEFAULT_DPI, A4_PIXEL_WIDTH_DEFAULT_DPI,
-                    DEFAULT_DPI, _resources_dir_pathlib, _results_dir_pathlib,
-                    _tmp_dir_pathlib)
+from config import (
+    A4_PIXEL_HEIGHT_DEFAULT_DPI,
+    A4_PIXEL_WIDTH_DEFAULT_DPI,
+    DEFAULT_DPI,
+    _resources_dir_pathlib,
+    _results_dir_pathlib,
+    _tmp_dir_pathlib,
+)
 from data_processing.data_processsor_class import DataProcessor
 from image_editor_class import ImageEditor
 
@@ -122,6 +127,7 @@ if __name__ == "__main__":
     product_serial_numbers = dataprocessor.get_list_of_all_elements_in_column(
         "Product Serial Number"
     )
+
     create_product_labels(
         target_directory,
         target_filename,
