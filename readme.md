@@ -1,6 +1,6 @@
 # Image processing
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Python 3.8.7=0](https://img.shields.io/badge/python-3.8.7-blue.svg)](https://www.python.org/downloads/release/python-380/)
+[![Python 3.9.5=0](https://img.shields.io/badge/python-3.9.5-blue.svg)](https://www.python.org/downloads/release/python-395/)
 
 Set of tools used for handy image processing workflows such as:
 * Extracting frames from videos
