@@ -5,6 +5,7 @@
 Set of tools used for handy image processing workflows such as:
 * Extracting frames from videos
 * Labeling sequences of frames
+* Create physical labels to identify products in a database
 
 # QuickStart: One-time setup
 
