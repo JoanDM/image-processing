@@ -16,16 +16,13 @@ if __name__ == "__main__":
 
     if path_to_video is not None:
         path_to_video = Path(path_to_video)
-        if target_dir is not None:
-            target_dir = Path(target_dir)
-        else:
-            target_dir = (
-                path_to_video.parents[0] / f"{path_to_video.stem}_extracted_frames"
-            )
-
     else:
         path_to_video = Path("path_to_video")
-        target_dir = _results_dir_pathlib / "user_defined_directory_to_store_frames"
+
+    if target_dir is not None:
+        target_dir = Path(target_dir)
+    else:
+        target_dir = _results_dir_pathlib / f"{path_to_video.stem}_extracted_frames"
 
     video_editor = VideoEditor(target_directory=target_dir)
 
