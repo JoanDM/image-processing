@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-from config import _results_dir_pathlib
+from config import _results_dir_pathlib, prGreen
 from video_editor_class import VideoEditor
 
 if __name__ == "__main__":
@@ -33,3 +33,5 @@ if __name__ == "__main__":
         path_to_video=path_to_video,
         # frame_prefix="test"
     )
+
+    prGreen(f"Success! Extracted frames can be found at {target_dir}")
