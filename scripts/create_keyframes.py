@@ -3,6 +3,9 @@ from pathlib import Path
 
 import cv2
 
+from config import _results_dir_pathlib, prGreen
+from data_processing.data_processsor_class import JsonDataProcessor
+
 
 def define_key_frame(frame_index, dict_with_keyframes):
     keyframe_name = input(
@@ -93,8 +96,6 @@ def navigate_frames_and_create_keyframes(directory_path):
     except KeyboardInterrupt:
         cv2.destroyAllWindows()
 
-    print(dict_with_keyframes)
-
     return dict_with_keyframes
 
 
@@ -118,4 +119,17 @@ if __name__ == "__main__":
     else:
         path_to_dir = Path("path_to_directory_with_sequence_of_frames")
 
-    _ = navigate_frames_and_create_keyframes(path_to_dir)
+    if target_dir is not None:
+        target_dir = Path(directory)
+    else:
+        target_dir = _results_dir_pathlib / f"stored_keyframes"
+
+    dict_with_keyframes = navigate_frames_and_create_keyframes(path_to_dir)
+
+    data_processor = JsonDataProcessor(target_dir)
+    data_processor.set_current_json_dict(dict_with_keyframes)
+    data_processor.save_current_dict_to_json_file(
+        target_filename=f"{path_to_dir.stem}_keyframes"
+    )
+    prGreen(f"Success! The following key frames were stored:")
+    data_processor.print_current_json_dict_content()
