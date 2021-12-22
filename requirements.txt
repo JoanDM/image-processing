@@ -5,3 +5,4 @@ pillow
 tqdm
 qrcode
 opencv-contrib-python
+-r data_processing/requirements.txt
