@@ -3,7 +3,9 @@
 [![Python 3.9.5=0](https://img.shields.io/badge/python-3.9.5-blue.svg)](https://www.python.org/downloads/release/python-395/)
 
 Set of tools used for handy image processing workflows such as:
-* Extracting frames from videos
+* Extracting frames from videos 
+
+https://user-images.githubusercontent.com/29776287/147124345-b70f87e4-4c77-4bee-82ec-ce4217bec5fb.mov
 * Labeling sequences of frames
 * Create physical labels to identify products in a database
 
