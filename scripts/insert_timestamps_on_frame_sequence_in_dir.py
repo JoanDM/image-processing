@@ -61,7 +61,9 @@ if __name__ == "__main__":
         # 23: "Title used from frame id 23 until next dict item"
     }
 
-    parser = argparse.ArgumentParser("Extract frames from a video")
+    parser = argparse.ArgumentParser(
+        "Insert timestamps on a sequence of frames in a directory"
+    )
     parser.add_argument("dir", nargs="?", help="path to directory with frames")
     parser.add_argument("tdir", nargs="?", help="target dir to store video")
     args = parser.parse_args()

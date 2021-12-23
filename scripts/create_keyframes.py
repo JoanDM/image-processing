@@ -9,9 +9,9 @@ from data_processing.data_processsor_class import JsonDataProcessor
 
 def define_key_frame(frame_index, dict_with_keyframes):
     keyframe_name = input(
-        f"Set a name for the keyframes starting from "
+        f"\nSet a name for the keyframe starting from "
         f"frame #{frame_index}\nPreviously defined keyframes:"
-        f"{dict_with_keyframes}\nIn case the keyframe is "
+        f"\n{dict_with_keyframes}\nIn case the keyframe is "
         f"already in the list, you can simply type the "
         f"corresponding integer."
         f"\nPress Enter if you don't want to define a "
@@ -39,12 +39,13 @@ def navigate_frames_and_create_keyframes(directory_path):
     dict_with_keyframes = define_key_frame(0, dict_with_keyframes)
 
     print(
-        "A window that displays frames should be visible. Set focus on the window."
-        "To navigate to the next"
-        "frame, press or hold 'n'. To navigate to the previous frame, press or 'p',"
-        "to set a keyframe in the active frame, press 's', to show the current stored"
-        " key frames, press 'i', to delete a stored key frame, press 'd', press 'q' "
-        "to quit"
+        "A window that displays frames should be visible. Please set focus on the "
+        "window.\n\nBasic commands:\n"
+        "\n\tTo navigate to the next"
+        "frame, press or hold 'n'.\n\tTo navigate to the previous frame, press or 'p'."
+        "\n\tTo set a keyframe in the active frame, press 's'."
+        "\n\tTo show the current stored key frames, press 'i'.\n\tTo delete a stored "
+        "key frame, press 'd'\n\tTo quit, press 'q'."
     )
 
     i += 1
@@ -122,7 +123,7 @@ if __name__ == "__main__":
     if target_dir is not None:
         target_dir = Path(directory)
     else:
-        target_dir = _results_dir_pathlib / f"stored_keyframes"
+        target_dir = _results_dir_pathlib / f"{path_to_dir.stem}_stored_keyframes"
 
     dict_with_keyframes = navigate_frames_and_create_keyframes(path_to_dir)
 

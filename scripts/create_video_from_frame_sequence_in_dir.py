@@ -8,7 +8,7 @@ DEFAULT_FRAME_RATE = 15
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        "Convert a sequence of frames in a directory to a video"
+        "Create a video from a sequence of frames in a directory"
     )
     parser.add_argument(
         "dir", nargs="?", help="directory containing sequence of frames"
