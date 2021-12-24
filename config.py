@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+import cv2
+
 _base_dir = os.path.abspath(os.path.dirname(__file__))
 _base_dir_pathlib = Path(_base_dir)
 _results_dir_pathlib = Path(_base_dir) / "results"
@@ -23,6 +25,13 @@ A4_PIXEL_WIDTH_DEFAULT_DPI = (
 A4_PIXEL_HEIGHT_DEFAULT_DPI = (
     int(DEFAULT_DPI * A4_HEIGHT_CM / 2.54) - A4_PIXEL_WIDTH_BLEED_AREA * 2
 )
+
+
+OPENCV_OBJECT_TRACKERS = {
+    "csrt": cv2.TrackerCSRT_create,
+    "kcf": cv2.TrackerKCF_create,
+    "mil": cv2.TrackerMIL_create,
+}
 
 
 def prRed(skk):
