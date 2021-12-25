@@ -4,14 +4,18 @@ from pathlib import Path
 import cv2
 
 from config import OPENCV_OBJECT_TRACKERS, _results_dir_pathlib
+from data_processing.data_processsor_class import JsonDataProcessor
 
 
 def navigate_frames_and_create_annotation(directory_path, tracker_type_str):
+    json_processor = JsonDataProcessor(directory_path)
 
     list_of_filenames = sorted(directory_path.glob("*.png"))
     cv2.namedWindow("Frame viewer")
     cv2.moveWindow("Frame viewer", 0, 0)
-    cv2.imshow("Frame viewer", cv2.imread(str(list_of_filenames[0])))
+
+    cv2.namedWindow("Draw Bounding Box")
+    cv2.setWindowProperty("Draw Bounding Box", cv2.WND_PROP_TOPMOST, 1)
 
     frame = cv2.imread(str(list_of_filenames[0]))
     initBB = cv2.selectROI(
@@ -36,9 +40,11 @@ def navigate_frames_and_create_annotation(directory_path, tracker_type_str):
 
     i = 0
     navigate_frames_automatically = False
+    cv2.setWindowProperty("Frame viewer", cv2.WND_PROP_TOPMOST, 1)
     try:
         while True:
-            frame = cv2.imread(str(list_of_filenames[i]))
+            file_path = list_of_filenames[i]
+            frame = cv2.imread(str(file_path))
 
             if frame is None:
                 return 0
@@ -83,10 +89,11 @@ def navigate_frames_and_create_annotation(directory_path, tracker_type_str):
 
                 tracked_obj_frame_crop = tracked_obj_frame_crop[y : y + h, x : x + w]
 
+                (win_x, win_y, win_w, win_h) = cv2.getWindowImageRect("Frame viewer")
+                cv2.moveWindow("Tracked result ", 0, win_y + win_h)
                 cv2.imshow("Tracked result", tracked_obj_frame_crop)
 
             if not navigate_frames_automatically:
-                print("waiting for key")
                 key = cv2.waitKey(0)
             else:
                 key = cv2.waitKey(1)
@@ -109,6 +116,7 @@ def navigate_frames_and_create_annotation(directory_path, tracker_type_str):
 
             # if 'r' key is pressed, reset tracker bounding box
             elif key == ord("r"):
+                cv2.setWindowProperty("Draw Bounding Box", cv2.WND_PROP_TOPMOST, 1)
                 initBB = cv2.selectROI(
                     "Draw Bounding Box", frame, fromCenter=False, showCrosshair=True
                 )
@@ -120,6 +128,7 @@ def navigate_frames_and_create_annotation(directory_path, tracker_type_str):
 
                 tracker = OPENCV_OBJECT_TRACKERS[tracker_type_str]()
                 tracker.init(frame, initBB)
+                cv2.setWindowProperty("Frame viewer", cv2.WND_PROP_TOPMOST, 1)
 
             # if 'q' key is selected, quit
             elif key == ord("q"):
@@ -131,6 +140,17 @@ def navigate_frames_and_create_annotation(directory_path, tracker_type_str):
                 i += 1
                 if i > len(list_of_filenames) - 1:
                     i = len(list_of_filenames) - 1
+
+            json_processor.json_dict = {}
+            json_processor.insert_key_val_to_current_json_dict(
+                "filename", file_path.stem
+            )
+            json_processor.insert_key_val_to_current_json_dict(
+                "box", [xn, yn, xn + wn, yn + hn]
+            )
+            json_processor.save_current_dict_to_json_file(
+                target_filename=file_path.stem, print_output_file_path=False
+            )
 
     except KeyboardInterrupt:
         cv2.destroyAllWindows()
