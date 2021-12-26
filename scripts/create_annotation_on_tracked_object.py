@@ -143,10 +143,10 @@ def navigate_frames_and_create_annotation(directory_path, tracker_type_str):
 
             json_processor.json_dict = {}
             json_processor.insert_key_val_to_current_json_dict(
-                "filename", file_path.stem
+                "filename", f"{file_path.name}"
             )
             json_processor.insert_key_val_to_current_json_dict(
-                "box", [xn, yn, xn + wn, yn + hn]
+                "bounding_box", [xn, yn, xn + wn, yn + hn]
             )
             json_processor.save_current_dict_to_json_file(
                 target_filename=file_path.stem, print_output_file_path=False
