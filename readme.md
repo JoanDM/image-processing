@@ -6,11 +6,11 @@ Set of tools used for handy image processing workflows such as:
 
 * Labeling sequences of frames with OpenCV tracking algorithms
 
-https://user-images.githubusercontent.com/29776287/147382847-bd389004-2789-4281-987b-a8ae46ba3811.mov
+https://user-images.githubusercontent.com/29776287/147406522-9f564753-4757-4ff4-9448-295b02f2b238.mov
 
 * Create physical labels to identify products in a database
 
-https://user-images.githubusercontent.com/29776287/147406051-1d6565a9-5771-438c-bfe0-95fb271eedf4.mov
+https://user-images.githubusercontent.com/29776287/147406215-2f8e80b2-b18c-4b62-8b42-343996e97fb9.mov
 
 * Extracting frames from videos 
 
