@@ -8,11 +8,13 @@ Set of tools used for handy image processing workflows such as:
 
 https://user-images.githubusercontent.com/29776287/147382847-bd389004-2789-4281-987b-a8ae46ba3811.mov
 
+* Create physical labels to identify products in a database
+
+https://user-images.githubusercontent.com/29776287/147406051-1d6565a9-5771-438c-bfe0-95fb271eedf4.mov
+
 * Extracting frames from videos 
 
 https://user-images.githubusercontent.com/29776287/147124345-b70f87e4-4c77-4bee-82ec-ce4217bec5fb.mov
-
-* Create physical labels to identify products in a database
 
 # QuickStart: One-time setup
 
