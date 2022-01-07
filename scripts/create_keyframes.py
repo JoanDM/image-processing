@@ -40,47 +40,58 @@ def navigate_frames_and_create_keyframes(directory_path):
 
     print(
         "A window that displays frames should be visible. Please set focus on the "
-        "window.\n\nBasic commands:\n"
-        "\n\tTo navigate to the next"
-        "frame, press or hold 'n'.\n\tTo navigate to the previous frame, press or 'p'."
-        "\n\tTo set a keyframe in the active frame, press 's'."
-        "\n\tTo show the current stored key frames, press 'i'.\n\tTo delete a stored "
-        "key frame, press 'd'\n\tTo quit, press 'q'."
+        "window.\nBasic commands:\n"
+        "\n\tTo start/stop looping through the frames automatically, press 's'."
+        "\n\tTo navigate to the next frame, press 'n'."
+        "\n\tTo navigate to the previous frame, press or 'p'."
+        "\n\tTo insert a new key frame, press 'i'."
+        "\n\tTo show the currently stored key frames, press 'r'."
+        "\n\tTo delete a stored key frame, press 'd'"
+        "\n\tTo quit, press 'q'."
     )
 
     i += 1
+    navigate_frames_automatically = False
     try:
         while True:
-            frame = cv2.imread(str(list_of_filenames[i]))
+            file_path = list_of_filenames[i]
+            frame = cv2.imread(str(file_path))
 
             if frame is None:
                 return 0
 
             cv2.imshow("Frame viewer", frame)
 
-            key = cv2.waitKey(0)
+            if not navigate_frames_automatically:
+                key = cv2.waitKey(0)
+            else:
+                key = cv2.waitKey(1)
 
-            # if's' key is selected, we are going to define a new keyframe
+            # if 's' key is selected, start/stop automated loop through frames
             if key == ord("s"):
+                navigate_frames_automatically = not navigate_frames_automatically
+
+            # if 'i' key is selected, we are going to insert a new keyframe
+            if key == ord("i"):
                 dict_with_keyframes = define_key_frame(i, dict_with_keyframes)
 
-            # if'n' key is selected, jump to the next keyframe
+            # if 'n' key is selected, jump to the next keyframe
             elif key == ord("n"):
                 i += 1
                 if i > len(list_of_filenames) - 1:
                     i = len(list_of_filenames) - 1
 
-            # if'n' key is selected, jump to the previous keyframe
+            # if 'p' key is selected, jump to the previous keyframe
             elif key == ord("p"):
                 i -= 1
                 if i < 0:
                     i = 0
 
-            # if'i' key is selected, show stored keyframes
-            elif key == ord("i"):
+            # if 'r' key is selected, show stored keyframes
+            elif key == ord("r"):
                 print(f"Active frame #{i}\nStored keyframes: {dict_with_keyframes}")
 
-            # if 'i' key is selected, let user delete keyframe
+            # if 'd' key is selected, let user delete keyframe
             elif key == ord("d"):
                 print(f"Stored keyframes: {dict_with_keyframes}")
                 keyframe_key_to_del = input(
@@ -93,6 +104,12 @@ def navigate_frames_and_create_keyframes(directory_path):
             elif key == ord("q"):
                 cv2.destroyAllWindows()
                 break
+
+            # if no key is selected (timeout passed), loop automatically to next frame
+            else:
+                i += 1
+                if i > len(list_of_filenames) - 1:
+                    i = len(list_of_filenames) - 1
 
     except KeyboardInterrupt:
         cv2.destroyAllWindows()

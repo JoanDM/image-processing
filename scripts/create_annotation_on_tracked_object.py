@@ -108,7 +108,7 @@ def navigate_frames_and_create_annotation(directory_path, tracker_type_str):
                 if i > len(list_of_filenames) - 1:
                     i = len(list_of_filenames) - 1
 
-            # if 'n' key is selected, jump to the previous keyframe
+            # if 'p' key is selected, jump to the previous keyframe
             elif key == ord("p"):
                 i -= 1
                 if i < 0:
