@@ -7,28 +7,9 @@ from config import _results_dir_pathlib, prGreen
 from data_processing.data_processsor_class import JsonDataProcessor
 
 
-def define_key_frame(frame_index, dict_with_keyframes):
-    keyframe_name = input(
-        f"\nSet a name for the keyframe starting from "
-        f"frame #{frame_index}\nPreviously defined keyframes:"
-        f"\n{dict_with_keyframes}\nIn case the keyframe is "
-        f"already in the list, you can simply type the "
-        f"corresponding integer."
-        f"\nPress Enter if you don't want to define a "
-        f"keyframe\n>"
-    )
-    if keyframe_name.isdigit():
-        dict_with_keyframes[frame_index] = dict_with_keyframes[int(keyframe_name)]
-
-    elif keyframe_name == "":
-        pass
-    else:
-        dict_with_keyframes[frame_index] = keyframe_name
-    return dict_with_keyframes
-
-
-def navigate_frames_and_create_keyframes(directory_path):
-    dict_with_keyframes = {}
+def navigate_frames_and_create_keyframes(directory_path, target_dir):
+    json_processor = JsonDataProcessor(target_dir)
+    json_processor.json_dict = {}
     i = 0
     cv2.namedWindow("Frame viewer frame")
     cv2.moveWindow("Frame viewer", 0, 0)
@@ -36,7 +17,7 @@ def navigate_frames_and_create_keyframes(directory_path):
     list_of_filenames = sorted(directory_path.glob("*.png"))
 
     cv2.imshow("Frame viewer", cv2.imread(str(list_of_filenames[0])))
-    dict_with_keyframes = define_key_frame(0, dict_with_keyframes)
+    define_key_frame(json_processor, i)
 
     print(
         "A window that displays frames should be visible. Please set focus on the "
@@ -47,7 +28,7 @@ def navigate_frames_and_create_keyframes(directory_path):
         "\n\tTo insert a new key frame, press 'i'."
         "\n\tTo show the currently stored key frames, press 'r'."
         "\n\tTo delete a stored key frame, press 'd'"
-        "\n\tTo quit, press 'q'."
+        "\n\tTo save and quit, press 'q'."
     )
 
     i += 1
@@ -73,7 +54,7 @@ def navigate_frames_and_create_keyframes(directory_path):
 
             # if 'i' key is selected, we are going to insert a new keyframe
             if key == ord("i"):
-                dict_with_keyframes = define_key_frame(i, dict_with_keyframes)
+                define_key_frame(json_processor, i)
 
             # if 'n' key is selected, jump to the next keyframe
             elif key == ord("n"):
@@ -89,16 +70,20 @@ def navigate_frames_and_create_keyframes(directory_path):
 
             # if 'r' key is selected, show stored keyframes
             elif key == ord("r"):
-                print(f"Active frame #{i}\nStored keyframes: {dict_with_keyframes}")
+                print(f"Active frame #{i}\nStored keyframes:")
+                json_processor.print_current_json_dict_content()
 
             # if 'd' key is selected, let user delete keyframe
             elif key == ord("d"):
-                print(f"Stored keyframes: {dict_with_keyframes}")
+                print(f"Stored keyframes:")
+                json_processor.print_current_json_dict_content()
                 keyframe_key_to_del = input(
                     "Insert key of the keyframe to be deleted\n>"
                 )
                 if keyframe_key_to_del.isdigit():
-                    del dict_with_keyframes[int(keyframe_key_to_del)]
+                    json_processor.delete_key_from_current_json_dict(
+                        int(keyframe_key_to_del)
+                    )
 
             # if 'q' key is selected, quit
             elif key == ord("q"):
@@ -111,10 +96,34 @@ def navigate_frames_and_create_keyframes(directory_path):
                 if i > len(list_of_filenames) - 1:
                     i = len(list_of_filenames) - 1
 
+        json_processor.save_current_dict_to_json_file(
+            target_filename=f"{path_to_dir.stem}_keyframes", print_output_file_path=True
+        )
+        prGreen(f"Success! The following key frames were stored:")
+        json_processor.print_current_json_dict_content()
+
     except KeyboardInterrupt:
         cv2.destroyAllWindows()
 
-    return dict_with_keyframes
+
+def define_key_frame(json_processor, index):
+    keyframe_name = input(
+        f"\nSet a name for the keyframe starting from "
+        f"frame #{index}\nPreviously defined keyframes:"
+        f"\n{json_processor.json_dict}\nIn case the keyframe is "
+        f"already in the list, you can simply type the "
+        f"corresponding integer."
+        f"\nPress Enter if you don't want to define a "
+        f"keyframe\n>"
+    )
+    if keyframe_name.isdigit():
+        json_processor.insert_key_val_to_current_json_dict(
+            index, json_processor.json_dict[keyframe_name]
+        )
+    elif keyframe_name == "":
+        pass
+    else:
+        json_processor.insert_key_val_to_current_json_dict(index, keyframe_name)
 
 
 if __name__ == "__main__":
@@ -142,12 +151,4 @@ if __name__ == "__main__":
     else:
         target_dir = _results_dir_pathlib / f"{path_to_dir.stem}_stored_keyframes"
 
-    dict_with_keyframes = navigate_frames_and_create_keyframes(path_to_dir)
-
-    data_processor = JsonDataProcessor(target_dir)
-    data_processor.set_current_json_dict(dict_with_keyframes)
-    data_processor.save_current_dict_to_json_file(
-        target_filename=f"{path_to_dir.stem}_keyframes"
-    )
-    prGreen(f"Success! The following key frames were stored:")
-    data_processor.print_current_json_dict_content()
+    navigate_frames_and_create_keyframes(path_to_dir, target_dir)
