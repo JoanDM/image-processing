@@ -35,7 +35,7 @@ def navigate_frames_and_create_annotation(directory_path, tracker_type_str):
         "\n\tTo reset the tracker bounding box, press 'r'."
         "\n\tTo show the current stored key frames, press 'i'."
         "\n\tTo delete a stored key frame, press 'd'"
-        "\n\tTo quit, press 'q'."
+        "\n\tTo save and quit, press 'q'."
     )
 
     i = 0
@@ -174,6 +174,7 @@ if __name__ == "__main__":
 
     if directory is not None:
         path_to_dir = Path(directory)
+
     else:
         path_to_dir = Path("path_to_directory_with_sequence_of_frames")
 
