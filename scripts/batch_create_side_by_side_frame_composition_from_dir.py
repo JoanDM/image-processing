@@ -39,7 +39,7 @@ def batch_create_side_by_side_frame_composition_from_dir(
 
         editor.create_and_set_blank_image_as_current()
 
-        editor.create_side_by_side_image_composition(left_image_path, right_image_path)
+        editor.stitch_images_side_by_side([left_image_path, right_image_path])
 
         editor.save_current_img(target_file_name=f"{str(i).zfill(8)}")
 

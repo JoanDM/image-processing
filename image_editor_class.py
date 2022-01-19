@@ -3,7 +3,7 @@ from pathlib import Path
 import qrcode
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
-from config import DEFAULT_DPI, _tmp_dir_pathlib, prRed
+from config import _tmp_dir_pathlib, prRed
 
 
 class ImageEditor(object):
@@ -46,7 +46,7 @@ class ImageEditor(object):
             self.current_img_path = self.target_directory / f"new_blank_image.{format}"
         self.current_img_name = self.current_img_path.stem
 
-    def save_current_img(self, target_file_name=None, dpi=(DEFAULT_DPI, DEFAULT_DPI)):
+    def save_current_img(self, target_file_name=None, dpi=None):
         if target_file_name is None:
             target_file_path = (
                 self.target_directory
@@ -161,16 +161,32 @@ class ImageEditor(object):
                 f"Check Full Disk Access settings on Mac"
             )
 
-    def create_side_by_side_image_composition(
-        self, path_to_left_side_image, path_to_right_side_image
-    ):
+    def stitch_images_side_by_side(self, list_of_paths_to_images):
+        first_img = Image.open(list_of_paths_to_images[0])
 
-        image1 = Image.open(path_to_left_side_image)
-        image2 = Image.open(path_to_right_side_image)
+        first_img_size = first_img.size
+        total_size = [first_img_size[0], first_img_size[1]]
+        for img_pth in list_of_paths_to_images[1:]:
+            img = Image.open(img_pth)
+            img_size = img.size
+            if img_size[1] != total_size[1]:
+                total_size[0] += int(total_size[1] / img_size[1] * img_size[0])
+            else:
+                total_size[0] += img_size[0]
 
-        image1_size = image1.size
+        self.resize_current_image(tuple(total_size))
+        self.current_img.paste(first_img, (0, 0))
 
-        self.resize_current_image((2 * image1_size[0], image1_size[1]))
-
-        self.current_img.paste(image1, (0, 0))
-        self.current_img.paste(image2, (image1_size[0], 0))
+        x_size_tracker = first_img_size[0]
+        for img_pth in list_of_paths_to_images[1:]:
+            next_img = Image.open(img_pth)
+            next_img_size = next_img.size
+            if next_img_size[1] != total_size[1]:
+                next_img = next_img.resize(
+                    (
+                        int(total_size[1] / next_img_size[1] * next_img_size[0]),
+                        int(total_size[1]),
+                    )
+                )
+            self.current_img.paste(next_img, (x_size_tracker, 0))
+            x_size_tracker += next_img.size[0]
