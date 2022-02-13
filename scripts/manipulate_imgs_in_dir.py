@@ -1,9 +1,11 @@
-import image_editor
-from concurrent import futures
-from tqdm import tqdm
 import argparse
-import file_manager
+from concurrent import futures
 from pathlib import Path
+
+from tqdm import tqdm
+
+import file_manager.file_manager as file_manager
+import image_editor
 
 
 def manipulate_img(img_path, target_output_dir=None):
@@ -15,20 +17,23 @@ def manipulate_img(img_path, target_output_dir=None):
     img = image_editor.strip_exif(img)
 
     # Save file
-    image_editor.save_img(img,
-                          target_file_name=file_name,
-                          target_directory=target_output_dir)
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        "Manipulate images in a directory"
+    image_editor.save_img(
+        img, target_file_name=file_name, target_directory=target_output_dir
     )
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser("Manipulate images in a directory")
     parser.add_argument(
         "-dir", nargs="?", help="Directory containing images", type=Path
     )
-    parser.add_argument("-tdir", nargs="?", help="Target dir to store composition",
-                        type=Path, default=None)
+    parser.add_argument(
+        "-tdir",
+        nargs="?",
+        help="Target dir to store composition",
+        type=Path,
+        default=None,
+    )
 
     args = parser.parse_args()
     target_dir = args.tdir
@@ -42,6 +47,7 @@ if __name__ == '__main__':
 
     with futures.ProcessPoolExecutor() as pool:
         with tqdm(total=len(list_of_files)) as progressbar:
-            for _ in pool.map(manipulate_img, list_of_files,
-                              [target_dir]*len(list_of_files)):
+            for _ in pool.map(
+                manipulate_img, list_of_files, [target_dir] * len(list_of_files)
+            ):
                 progressbar.update(1)

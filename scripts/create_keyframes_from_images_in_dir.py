@@ -3,8 +3,8 @@ from pathlib import Path
 
 import cv2
 
-import file_manager
-from config import _results_dir_pathlib, prGreen
+import file_manager.file_manager as file_manager
+from config import prGreen
 from data_processing.data_processsor_class import JsonDataProcessor
 
 
@@ -100,7 +100,7 @@ def navigate_frames_and_create_keyframes(directory_path, target_dir):
         json_processor.save_current_dict_to_json_file(
             target_filename=f"{directory_path.stem}_keyframes",
             target_directory=target_dir,
-            print_output_file_path=True
+            print_output_file_path=True,
         )
         prGreen(f"Success! The following key frames were stored:")
         json_processor.print_current_json_dict_content()
@@ -137,8 +137,13 @@ if __name__ == "__main__":
         "-dir", nargs="?", help="Directory containing sequence of frames", type=Path
     )
 
-    parser.add_argument("-tdir", nargs="?", help="Target dir to store keyframes",
-                        type=Path, default=None)
+    parser.add_argument(
+        "-tdir",
+        nargs="?",
+        help="Target dir to store keyframes",
+        type=Path,
+        default=None,
+    )
 
     args = parser.parse_args()
     target_dir = args.tdir

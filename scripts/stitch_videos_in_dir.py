@@ -1,8 +1,9 @@
-from pathlib import Path
 import argparse
-from config import DEFAULT_FRAME_RATE
-import file_manager
+from pathlib import Path
+
+import file_manager.file_manager as file_manager
 import video_editor
+from config import DEFAULT_FRAME_RATE
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -11,11 +12,22 @@ if __name__ == "__main__":
     parser.add_argument(
         "-dir", nargs="?", help="Directory containing images", type=Path
     )
-    parser.add_argument("-tdir", nargs="?", help="Target dir to store composition",
-                        type=Path, default=None)
+    parser.add_argument(
+        "-tdir",
+        nargs="?",
+        help="Target dir to store composition",
+        type=Path,
+        default=None,
+    )
 
     parser.add_argument("-fname", nargs="?", help="name for the composition", type=str)
-    parser.add_argument("-fps", nargs="?", help="target video frame rate", default=DEFAULT_FRAME_RATE, type=int)
+    parser.add_argument(
+        "-fps",
+        nargs="?",
+        help="target video frame rate",
+        default=DEFAULT_FRAME_RATE,
+        type=int,
+    )
 
     args = parser.parse_args()
     target_dir = args.tdir
@@ -35,5 +47,5 @@ if __name__ == "__main__":
         list_of_paths_to_videos=list_of_paths_to_videos,
         fps=frame_rate,
         target_filename=file_name,
-        target_directory=target_dir
+        target_directory=target_dir,
     )

@@ -1,8 +1,9 @@
-from PIL import Image, ImageDraw, ImageFont, ImageOps
-import numpy
-import file_manager
-import qrcode
 import cv2
+import numpy
+import qrcode
+from PIL import Image, ImageDraw, ImageFont, ImageOps
+
+import file_manager.file_manager as file_manager
 
 
 def open_image(path_to_img):
@@ -14,7 +15,7 @@ def create_blank_image(size=(1, 1)):
 
 
 def convert_pil_to_opencv_format(img):
-    pil_img = img.convert('RGB')
+    pil_img = img.convert("RGB")
     img = numpy.array(pil_img)
     return img[:, :, ::-1].copy()
 
@@ -31,8 +32,9 @@ def strip_exif(img):
     return img
 
 
-def save_img(img, target_file_name, target_directory, dpi=None,
-             img_format="png", overwrite=False):
+def save_img(
+    img, target_file_name, target_directory, dpi=None, img_format="png", overwrite=False
+):
     target_file_path = target_directory / f"{target_file_name}.{img_format}"
     if target_file_path.exists() and not overwrite:
         target_file_name = file_manager.find_new_unique_filename(target_file_path)
@@ -58,14 +60,14 @@ def invert(img):
 
 
 def insert_rectangle(
-        img,
-        rectangle_fill_color="black",
-        anchor_point="top_left",
-        position=None,
-        rectangle_height=None,
-        rectangle_width=None,
-        outline_color=None,
-        outline_width=None,
+    img,
+    rectangle_fill_color="black",
+    anchor_point="top_left",
+    position=None,
+    rectangle_height=None,
+    rectangle_width=None,
+    outline_color=None,
+    outline_width=None,
 ):
     # X is the horizontal axis, top left corner of the picture is 0
     # Y is the vertical axis, top left corner of the picture is 0
@@ -88,13 +90,13 @@ def insert_rectangle(
 
 
 def insert_text(
-        img,
-        text,
-        position,
-        max_width_pix,
-        max_height_pix,
-        color="white",
-        anchor_point='top_left'
+    img,
+    text,
+    position,
+    max_width_pix,
+    max_height_pix,
+    color="white",
+    anchor_point="top_left",
 ):
     draw = ImageDraw.Draw(img)
 
@@ -142,22 +144,24 @@ def insert_text(
     draw.text(xy=position, text=text, fill=color, font=font)
 
 
-def insert_text_box(img,
-                    text,
-                    position,
-                    box_width,
-                    box_height,
-                    color="white",
-                    anchor_point="top_left",
-                    insert_subtitle=False
-                    ):
-    insert_rectangle(img=img,
-                     rectangle_fill_color="black",
-                     position=position,
-                     rectangle_height=box_height,
-                     rectangle_width=box_width,
-                     anchor_point=anchor_point
-                     )
+def insert_text_box(
+    img,
+    text,
+    position,
+    box_width,
+    box_height,
+    color="white",
+    anchor_point="top_left",
+    insert_subtitle=False,
+):
+    insert_rectangle(
+        img=img,
+        rectangle_fill_color="black",
+        position=position,
+        rectangle_height=box_height,
+        rectangle_width=box_width,
+        anchor_point=anchor_point,
+    )
     img_w, img_h = img.size
     quiet_zone_w = img_w * 0.01
     quiet_zone_h = img_h * 0.01
@@ -169,26 +173,29 @@ def insert_text_box(img,
         max_width_pix=box_width * 0.8,
         max_height_pix=box_height * 0.8,
         position=text_position,
-        anchor_point=anchor_point)
+        anchor_point=anchor_point,
+    )
 
 
-def insert_subtitle(img,
-                    text,
-                    color="white",
-                    subtitle_height_percentage=0.1,
-                    ):
+def insert_subtitle(
+    img,
+    text,
+    color="white",
+    subtitle_height_percentage=0.1,
+):
     position = [0, img.size[1]]
     anchor_point = "bottom_left"
     rectangle_height = img.size[1] * subtitle_height_percentage
     rectangle_width = img.size[0]
 
-    insert_rectangle(img=img,
-                     rectangle_fill_color="black",
-                     position=position,
-                     rectangle_height=rectangle_height,
-                     rectangle_width=rectangle_width,
-                     anchor_point=anchor_point
-                     )
+    insert_rectangle(
+        img=img,
+        rectangle_fill_color="black",
+        position=position,
+        rectangle_height=rectangle_height,
+        rectangle_width=rectangle_width,
+        anchor_point=anchor_point,
+    )
 
     img_w, img_h = img.size
     # quiet_zone_w = img_w * 0.01
@@ -203,7 +210,8 @@ def insert_subtitle(img,
         max_width_pix=rectangle_width * 0.8,
         max_height_pix=rectangle_height * 0.8,
         position=text_position,
-        anchor_point=anchor_point)
+        anchor_point=anchor_point,
+    )
 
 
 def stitch_images_side_by_side(list_of_paths_to_images, insert_subtitles=False):
@@ -233,19 +241,25 @@ def stitch_images_side_by_side(list_of_paths_to_images, insert_subtitles=False):
                 )
             )
         if insert_subtitles:
-            insert_subtitle(img=next_img, text=img_pth.stem, color="white",
-                            subtitle_height_percentage=0.1)
+            insert_subtitle(
+                img=next_img,
+                text=img_pth.stem,
+                color="white",
+                subtitle_height_percentage=0.1,
+            )
         comp_img.paste(next_img, (x_size_tracker, 0))
         x_size_tracker += next_img.size[0]
 
     return comp_img
 
 
-def paste_img(main_img, img_to_paste, position, anchor_point="center",
-              resizing_factor=1):
+def paste_img(
+    main_img, img_to_paste, position, anchor_point="center", resizing_factor=1
+):
     img_w, img_h = img_to_paste.size
     img_to_paste = img_to_paste.resize(
-        (int(img_h * resizing_factor), int(img_h * resizing_factor)))
+        (int(img_h * resizing_factor), int(img_h * resizing_factor))
+    )
     img_w, img_h = img_to_paste.size
     offset = (0, 0)
     if anchor_point == "center":

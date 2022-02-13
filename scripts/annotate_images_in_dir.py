@@ -2,8 +2,9 @@ import argparse
 from pathlib import Path
 
 import cv2
-import file_manager
-from config import OPENCV_OBJECT_TRACKERS, _results_dir_pathlib
+
+import file_manager.file_manager as file_manager
+from config import OPENCV_OBJECT_TRACKERS
 from data_processing.data_processsor_class import JsonDataProcessor
 
 
@@ -166,8 +167,13 @@ if __name__ == "__main__":
         "-dir", nargs="?", help="Directory containing sequence of frames", type=Path
     )
 
-    parser.add_argument("-tdir", nargs="?", help="Target dir to store composition",
-                        type=Path, default=None)
+    parser.add_argument(
+        "-tdir",
+        nargs="?",
+        help="Target dir to store composition",
+        type=Path,
+        default=None,
+    )
 
     args = parser.parse_args()
     target_dir = args.tdir

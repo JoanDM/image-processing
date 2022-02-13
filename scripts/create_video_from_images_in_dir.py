@@ -1,8 +1,8 @@
 import argparse
 from pathlib import Path
-from config import DEFAULT_FRAME_RATE, prGreen
+
 import video_editor
-import webbrowser
+from config import DEFAULT_FRAME_RATE
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -11,10 +11,24 @@ if __name__ == "__main__":
     parser.add_argument(
         "-dir", nargs="?", help="directory containing sequence of frames", type=str
     )
-    parser.add_argument("-tdir", nargs="?", help="target dir to store video", type=str, default=None)
+    parser.add_argument(
+        "-tdir", nargs="?", help="target dir to store video", type=str, default=None
+    )
     parser.add_argument("-vname", nargs="?", help="name for the video", type=str)
-    parser.add_argument("-fps", nargs="?", help="target video frame rate", default=DEFAULT_FRAME_RATE, type=int)
-    parser.add_argument("-freeze", nargs="?", help="freeze last frames for a second", default=True, type=bool)
+    parser.add_argument(
+        "-fps",
+        nargs="?",
+        help="target video frame rate",
+        default=DEFAULT_FRAME_RATE,
+        type=int,
+    )
+    parser.add_argument(
+        "-freeze",
+        nargs="?",
+        help="freeze last frames for a second",
+        default=True,
+        type=bool,
+    )
 
     args = parser.parse_args()
     directory = Path(args.dir)
@@ -36,7 +50,7 @@ if __name__ == "__main__":
         fps=frame_rate,
         freeze_last_frame=freeze_bool,
         seconds_freezing_frame=1,
-        insert_subtitles=False
+        insert_subtitles=False,
     )
 
     # prGreen(f"\n Done, video stored in {target_dir / video_name}")

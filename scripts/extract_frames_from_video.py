@@ -1,18 +1,16 @@
 import argparse
 from pathlib import Path
-import file_manager
+
+import file_manager.file_manager as file_manager
 import video_editor
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(
-        "Extract frames from a video"
-    )
+    parser = argparse.ArgumentParser("Extract frames from a video")
+    parser.add_argument("-vid", nargs="?", help="Path to video", type=Path)
     parser.add_argument(
-        "-vid", nargs="?", help="Path to video", type=Path
+        "-tdir", nargs="?", help="Target dir to store frames", type=Path, default=None
     )
-    parser.add_argument("-tdir", nargs="?", help="Target dir to store frames",
-                        type=Path, default=None)
 
     args = parser.parse_args()
     path_to_video = args.vid

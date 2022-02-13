@@ -1,3 +1,4 @@
+import image_editor
 from config import (
     A4_PIXEL_HEIGHT_DEFAULT_DPI,
     A4_PIXEL_WIDTH_DEFAULT_DPI,
@@ -6,16 +7,15 @@ from config import (
     _results_dir_pathlib,
 )
 from data_processing.data_processsor_class import CsvDataProcessor
-import image_editor
 
 
 def create_product_labels(
-        target_directory,
-        target_file_name,
-        product_names,
-        product_models,
-        product_serial_numbers,
-        img_format="bmp"
+    target_directory,
+    target_file_name,
+    product_names,
+    product_models,
+    product_serial_numbers,
+    img_format="bmp",
 ):
     # Specify label width and height
     label_width_cm, label_height_cm = (8, 3)
@@ -36,7 +36,8 @@ def create_product_labels(
     for index in range(len(product_names)):
         if i == 0 and j == 0:
             product_labels_img = image_editor.create_blank_image(
-                size=(A4_PIXEL_WIDTH_DEFAULT_DPI, A4_PIXEL_HEIGHT_DEFAULT_DPI))
+                size=(A4_PIXEL_WIDTH_DEFAULT_DPI, A4_PIXEL_HEIGHT_DEFAULT_DPI)
+            )
 
         if i == max_label_rows:
             j += 1
@@ -44,21 +45,24 @@ def create_product_labels(
         if j == max_label_cols:
             j = 0
             i = 0
-            image_editor.save_img(img=product_labels_img,
-                                  target_file_name=target_file_name,
-                                  target_directory=target_directory,
-                                  img_format=img_format,
-                                  dpi=(DEFAULT_DPI, DEFAULT_DPI))
+            image_editor.save_img(
+                img=product_labels_img,
+                target_file_name=target_file_name,
+                target_directory=target_directory,
+                img_format=img_format,
+                dpi=(DEFAULT_DPI, DEFAULT_DPI),
+            )
 
         # Draw label rectangle
-        image_editor.insert_rectangle(img=product_labels_img,
-                                      rectangle_fill_color="white",
-                                      position=(
-                                      j * label_width_px, i * label_height_px),
-                                      rectangle_height=label_height_px,
-                                      rectangle_width=label_width_px,
-                                      outline_color="black",
-                                      outline_width=2, )
+        image_editor.insert_rectangle(
+            img=product_labels_img,
+            rectangle_fill_color="white",
+            position=(j * label_width_px, i * label_height_px),
+            rectangle_height=label_height_px,
+            rectangle_width=label_width_px,
+            outline_color="black",
+            outline_width=2,
+        )
 
         # Create text field with product name, model and serial_number
         product_name = product_names[index]
@@ -75,11 +79,13 @@ def create_product_labels(
                 i * label_height_px + offset_from_label_corners,
             ),
             max_width_pix=max_text_width_pix,
+            max_height_pix=label_height_px,
         )
 
         # Create QR code to serve as unique product identifier
         qr_img = image_editor.create_qr_code_image(
-            code_content=f"{product_serial_number}")
+            code_content=f"{product_serial_number}"
+        )
 
         desired_qr_code_width_pix = (label_width_px - max_text_width_pix) * 0.8
 
@@ -102,11 +108,13 @@ def create_product_labels(
         )
 
         i += 1
-    image_editor.save_img(img=product_labels_img,
-                          target_file_name=target_file_name,
-                          target_directory=target_directory,
-                          img_format=img_format,
-                          dpi=(DEFAULT_DPI, DEFAULT_DPI))
+    image_editor.save_img(
+        img=product_labels_img,
+        target_file_name=target_file_name,
+        target_directory=target_directory,
+        img_format=img_format,
+        dpi=(DEFAULT_DPI, DEFAULT_DPI),
+    )
 
 
 if __name__ == "__main__":

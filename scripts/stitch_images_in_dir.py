@@ -1,7 +1,8 @@
-from pathlib import Path
 import argparse
+from pathlib import Path
+
+import file_manager.file_manager as file_manager
 import image_editor
-import file_manager
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -10,8 +11,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "-dir", nargs="?", help="Directory containing images", type=Path
     )
-    parser.add_argument("-tdir", nargs="?", help="Target dir to store composition",
-                        type=Path, default=None)
+    parser.add_argument(
+        "-tdir",
+        nargs="?",
+        help="Target dir to store composition",
+        type=Path,
+        default=None,
+    )
 
     parser.add_argument("-fname", nargs="?", help="name for the composition", type=str)
 
@@ -29,8 +35,9 @@ if __name__ == "__main__":
     list_of_paths_to_images = file_manager.list_all_image_filepaths_in_dir(args.dir)
 
     comp = image_editor.stitch_images_side_by_side(
-        list_of_paths_to_images=list_of_paths_to_images,
-        insert_subtitles=True)
+        list_of_paths_to_images=list_of_paths_to_images, insert_subtitles=True
+    )
 
-    image_editor.save_img(img=comp, target_file_name=file_name,
-                          target_directory=target_dir)
+    image_editor.save_img(
+        img=comp, target_file_name=file_name, target_directory=target_dir
+    )
