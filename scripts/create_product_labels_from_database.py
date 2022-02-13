@@ -4,20 +4,19 @@ from config import (
     DEFAULT_DPI,
     _resources_dir_pathlib,
     _results_dir_pathlib,
-    _tmp_dir_pathlib,
 )
 from data_processing.data_processsor_class import CsvDataProcessor
-from image_editor_class import ImageEditor
+import image_editor
 
 
 def create_product_labels(
-    target_directory,
-    target_file_name,
-    product_names,
-    product_models,
-    product_serial_numbers,
+        target_directory,
+        target_file_name,
+        product_names,
+        product_models,
+        product_serial_numbers,
+        img_format="bmp"
 ):
-
     # Specify label width and height
     label_width_cm, label_height_cm = (8, 3)
     label_width_inch, label_height_inch = (
@@ -34,36 +33,32 @@ def create_product_labels(
     # Create grid of labels, create additional files if they don't fit in a single A4
     i = 0
     j = 0
-    file_id = 0
     for index in range(len(product_names)):
+        if i == 0 and j == 0:
+            product_labels_img = image_editor.create_blank_image(
+                size=(A4_PIXEL_WIDTH_DEFAULT_DPI, A4_PIXEL_HEIGHT_DEFAULT_DPI))
+
         if i == max_label_rows:
             j += 1
             i = 0
         if j == max_label_cols:
             j = 0
             i = 0
-            editor.save_current_img(
-                target_file_name=editor.current_img_name, dpi=(DEFAULT_DPI, DEFAULT_DPI)
-            )
-        if i == 0 and j == 0:
-            editor = ImageEditor(target_directory)
-            file_id += 1
-            editor.create_and_set_blank_image_as_current(
-                size=(A4_PIXEL_WIDTH_DEFAULT_DPI, A4_PIXEL_HEIGHT_DEFAULT_DPI),
-                format="bmp",
-                target_filename=f"{target_file_name}_{file_id}",
-            )
+            image_editor.save_img(img=product_labels_img,
+                                  target_file_name=target_file_name,
+                                  target_directory=target_directory,
+                                  img_format=img_format,
+                                  dpi=(DEFAULT_DPI, DEFAULT_DPI))
 
         # Draw label rectangle
-        editor.insert_rectangle_to_current_img(
-            rectangle_fill_color="white",
-            x_coord=j * label_width_px,
-            y_coord=i * label_height_px,
-            rectangle_height=label_height_px,
-            rectangle_width=label_width_px,
-            outline_color="black",
-            outline_width=2,
-        )
+        image_editor.insert_rectangle(img=product_labels_img,
+                                      rectangle_fill_color="white",
+                                      position=(
+                                      j * label_width_px, i * label_height_px),
+                                      rectangle_height=label_height_px,
+                                      rectangle_width=label_width_px,
+                                      outline_color="black",
+                                      outline_width=2, )
 
         # Create text field with product name, model and serial_number
         product_name = product_names[index]
@@ -71,7 +66,8 @@ def create_product_labels(
         product_serial_number = product_serial_numbers[index]
         max_text_width_pix = int(label_width_px * 0.75)
         offset_from_label_corners = int(label_width_px * 0.02)
-        editor.insert_text_to_current_img(
+        image_editor.insert_text(
+            img=product_labels_img,
             text=f"{product_name}\n\nModel: {product_model}\nSN:{product_serial_number}",
             color="black",
             position=(
@@ -82,21 +78,18 @@ def create_product_labels(
         )
 
         # Create QR code to serve as unique product identifier
-        qreditor = ImageEditor(_tmp_dir_pathlib)
-        qreditor.create_and_set_qr_code_image_as_current(
-            code_content=f"{product_serial_number}"
-        )
+        qr_img = image_editor.create_qr_code_image(
+            code_content=f"{product_serial_number}")
 
         desired_qr_code_width_pix = (label_width_px - max_text_width_pix) * 0.8
 
-        qr_code_w, h = qreditor.get_current_img_size()
+        qr_code_w, h = qr_img.size
 
         barcode_resizing_factor = desired_qr_code_width_pix / qr_code_w
 
-        qreditor.save_current_img()
-
-        editor.insert_img_to_current_img(
-            path_to_img=qreditor.current_img_path,
+        image_editor.paste_img(
+            main_img=product_labels_img,
+            img_to_paste=qr_img,
             position=(
                 j * label_width_px
                 + max_text_width_pix
@@ -109,9 +102,11 @@ def create_product_labels(
         )
 
         i += 1
-
-    editor.save_current_img(target_file_name=editor.current_img_name)
-    qreditor.cleanup_tmp_dir()
+    image_editor.save_img(img=product_labels_img,
+                          target_file_name=target_file_name,
+                          target_directory=target_directory,
+                          img_format=img_format,
+                          dpi=(DEFAULT_DPI, DEFAULT_DPI))
 
 
 if __name__ == "__main__":

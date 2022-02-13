@@ -30,7 +30,7 @@ def extract_frames_and_insert_timestamps_from_video(path_to_video, target_direct
         image_editor.insert_text_to_current_img(
             text=f"Frame #{i + 1}\n{round(i * (1/video_fps), 3)} seconds"
         )
-        image_editor.resize_current_image((1280, 720))
+        image_editor.resize_current_img((1280, 720))
         image_editor.save_current_img(target_file_name=f"{str(i).zfill(8)}")
 
     video_editor.cleanup_tmp_dir()

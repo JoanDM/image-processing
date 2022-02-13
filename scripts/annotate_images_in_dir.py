@@ -2,13 +2,13 @@ import argparse
 from pathlib import Path
 
 import cv2
-
+import file_manager
 from config import OPENCV_OBJECT_TRACKERS, _results_dir_pathlib
 from data_processing.data_processsor_class import JsonDataProcessor
 
 
-def navigate_frames_and_create_annotation(directory_path, tracker_type_str):
-    json_processor = JsonDataProcessor(directory_path)
+def navigate_frames_and_create_annotation(directory_path, tracker_type_str, target_dir):
+    json_processor = JsonDataProcessor()
 
     list_of_filenames = sorted(directory_path.glob("*.png"))
     cv2.namedWindow("Frame viewer")
@@ -149,40 +149,33 @@ def navigate_frames_and_create_annotation(directory_path, tracker_type_str):
                 "bounding_box", [xn, yn, xn + wn, yn + hn]
             )
             json_processor.save_current_dict_to_json_file(
-                target_filename=file_path.stem, print_output_file_path=False
+                target_filename=file_path.stem,
+                target_directory=target_dir,
+                print_output_file_path=False,
             )
 
     except KeyboardInterrupt:
         cv2.destroyAllWindows()
 
-    return 0
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        "Create a list of key frames (key=frame id, value=clip_name) and store it as JSON"
+        "Track a feature and store the bounding box as JSON"
     )
     parser.add_argument(
-        "dir", nargs="?", help="directory containing sequence of frames"
+        "-dir", nargs="?", help="Directory containing sequence of frames", type=Path
     )
-    parser.add_argument("tdir", nargs="?", help="target dir to store video")
+
+    parser.add_argument("-tdir", nargs="?", help="Target dir to store composition",
+                        type=Path, default=None)
+
     args = parser.parse_args()
-
-    directory = args.dir
-
     target_dir = args.tdir
 
-    if directory is not None:
-        path_to_dir = Path(directory)
+    if target_dir is None:
+        target_dir = args.dir.parents[0] / f"{args.dir.stem}_frame_annotations"
+        file_manager.create_directory(target_dir)
 
-    else:
-        path_to_dir = Path("path_to_directory_with_sequence_of_frames")
-
-    if target_dir is not None:
-        target_dir = Path(directory)
-    else:
-        target_dir = _results_dir_pathlib / f"{path_to_dir.stem}_frame_annotations"
-
-    _ = navigate_frames_and_create_annotation(
-        directory_path=path_to_dir, tracker_type_str="csrt"
+    navigate_frames_and_create_annotation(
+        directory_path=args.dir, tracker_type_str="csrt", target_dir=target_dir
     )

@@ -1,3 +1,6 @@
 [submodule "data_processing"]
 	path = data_processing
 	url = git@github.com:JoanDM/data-processing.git
+[submodule "file_manager"]
+	path = file_manager
+	url = git@github.com:JoanDM/file-manager.git
