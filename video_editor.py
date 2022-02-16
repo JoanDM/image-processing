@@ -173,6 +173,8 @@ def stitch_list_of_videos_side_by_side(
 
     fps_c = cap1.get(cv2.CAP_PROP_FPS)
     fps_c2 = cap2.get(cv2.CAP_PROP_FPS)
+    num_frames = cap1.get(cv2.CAP_PROP_FRAME_COUNT)
+
     # else:
     #     size = (int(Window.split("x")[0]), int(Window.split("x")[1]))
 
@@ -193,7 +195,7 @@ def stitch_list_of_videos_side_by_side(
     fourcc = cv2.VideoWriter_fourcc("m", "p", "4", "v")
     videowriter = cv2.VideoWriter(str(target_file_path), fourcc, fps, size)
 
-    while True:
+    for _ in tqdm.tqdm(range(int(num_frames))):
         ret, frame1 = cap1.read()
         ret, frame2 = cap2.read()
         if frame1 is None or frame2 is None:
