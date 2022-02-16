@@ -26,8 +26,7 @@ if __name__ == "__main__":
         "-freeze",
         nargs="?",
         help="freeze last frames for a second",
-        default=True,
-        type=bool,
+        action="store_true",
     )
 
     args = parser.parse_args()
