@@ -28,6 +28,7 @@ if __name__ == "__main__":
         default=DEFAULT_FRAME_RATE,
         type=int,
     )
+    parser.add_argument("-nosubs", help="insert img subtitles", action="store_false")
 
     args = parser.parse_args()
     target_dir = args.tdir
@@ -48,4 +49,5 @@ if __name__ == "__main__":
         fps=frame_rate,
         target_filename=file_name,
         target_directory=target_dir,
+        insert_subtitle=args.nosubs,
     )
