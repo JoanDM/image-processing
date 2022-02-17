@@ -7,15 +7,15 @@ from config import DEFAULT_FRAME_RATE
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        "Create an image composition by stitching images in a directory"
+        "Create a video composition by stitching videos in a directory"
     )
     parser.add_argument(
-        "-dir", nargs="?", help="Directory containing images", type=Path
+        "-dir", nargs="?", help="Directory containing videos", type=Path
     )
     parser.add_argument(
         "-tdir",
         nargs="?",
-        help="Target dir to store composition",
+        help="Target dir to store video composition",
         type=Path,
         default=None,
     )
