@@ -37,8 +37,7 @@ def save_img(
 ):
     target_file_path = target_directory / f"{target_file_name}.{img_format}"
     if target_file_path.exists() and not overwrite:
-        target_file_name = file_manager.find_new_unique_filename(target_file_path)
-        target_file_path = target_directory / f"{target_file_name}.{img_format}"
+        target_file_path = file_manager.find_new_unique_file_path(target_file_path)
 
     img.save(target_file_path, dpi=dpi)
 

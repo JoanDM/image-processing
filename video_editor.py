@@ -19,10 +19,10 @@ def create_video_from_frames_in_dir(
     insert_subtitles=False,
 ):
     file_manager.create_directory(target_directory)
-    target_video_name = file_manager.find_new_unique_filename(
+    target_video_path = file_manager.find_new_unique_file_path(
         target_directory / f"{target_video_name}.mp4"
     )
-    target_video_path = target_directory / f"{target_video_name}.mp4"
+
     list_of_files = file_manager.list_all_pngs_in_dir(path_to_directory)
 
     img = cv2.imread(str(list_of_files[0]))
@@ -153,10 +153,9 @@ def stitch_list_of_videos_side_by_side(
     fps,
     insert_subtitle=False,
 ):
-    target_filename = file_manager.find_new_unique_filename(
+    target_file_path = file_manager.find_new_unique_file_path(
         target_file_path=target_directory / f"{target_filename}.mp4"
     )
-    target_file_path = target_directory / f"{target_filename}.mp4"
 
     Video1 = list_of_paths_to_videos[0]
     Video2 = list_of_paths_to_videos[1]
