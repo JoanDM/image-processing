@@ -214,39 +214,32 @@ def insert_subtitle(
     )
 
 
-def stitch_images_side_by_side(list_of_paths_to_images, insert_subtitles=False):
-    first_img = open_image(list_of_paths_to_images[0])
-
+def stitch_images_side_by_side(list_of_imgs, list_of_subtitles=None):
+    first_img = list_of_imgs[0]
     first_img_size = first_img.size
     total_size = [first_img_size[0], first_img_size[1]]
-    for img_pth in list_of_paths_to_images[1:]:
-        img = open_image(img_pth)
+    for img in list_of_imgs[1:]:
         img_size = img.size
         if img_size[1] != total_size[1]:
-            total_size[0] += int(total_size[1] / img_size[1] * img_size[0])
+            total_size[0] += int((img_size[0] / img_size[1]) * total_size[1])
         else:
             total_size[0] += img_size[0]
 
     comp_img = create_blank_image(tuple(total_size))
 
     x_size_tracker = 0
-    for img_pth in list_of_paths_to_images:
-        next_img = open_image(img_pth)
+    for i, next_img in enumerate(list_of_imgs):
         next_img_size = next_img.size
         if next_img_size[1] != total_size[1]:
             next_img = next_img.resize(
-                (
-                    int(total_size[1] / next_img_size[1] * next_img_size[0]),
+                size=(
+                    int(next_img_size[0] / next_img_size[1] * total_size[1]),
                     int(total_size[1]),
                 )
             )
-        if insert_subtitles:
-            insert_subtitle(
-                img=next_img,
-                text=img_pth.stem,
-                color="white",
-                subtitle_height_percentage=DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE,
-            )
+        if list_of_subtitles:
+            insert_subtitle(next_img, list_of_subtitles[i])
+
         comp_img.paste(next_img, (x_size_tracker, 0))
         x_size_tracker += next_img.size[0]
 

@@ -163,54 +163,46 @@ def stitch_list_of_videos_side_by_side(
     cap1 = cv2.VideoCapture(str(Video1))
     cap2 = cv2.VideoCapture(str(Video2))
 
-    # The video 1 set the video 1 as the default size and fps
-    Video_h = cap1.get(cv2.CAP_PROP_FRAME_HEIGHT)
-    Video_w = cap1.get(cv2.CAP_PROP_FRAME_WIDTH)
-    Video_h2 = cap2.get(cv2.CAP_PROP_FRAME_HEIGHT)
-    Video_w2 = cap2.get(cv2.CAP_PROP_FRAME_WIDTH)
-    size = (int(Video_w + Video_w2), int(Video_h))
-
     fps_c = cap1.get(cv2.CAP_PROP_FPS)
     fps_c2 = cap2.get(cv2.CAP_PROP_FPS)
-    num_frames = cap1.get(cv2.CAP_PROP_FRAME_COUNT)
+    num_frames_vid1 = int(cap1.get(cv2.CAP_PROP_FRAME_COUNT))
+    num_frames_vid2 = int(cap2.get(cv2.CAP_PROP_FRAME_COUNT))
 
-    # else:
-    #     size = (int(Window.split("x")[0]), int(Window.split("x")[1]))
-
-    if int(fps_c) != int(fps_c2):
-        prRed(
-            f"Warning frame rates differ. {fps_c} vs {fps_c2}. "
-            f"Video with highest frame rate will be converted to match the other"
-        )
-
-        if fps_c > fps_c2:
-            Video1 = convert_video_frame_rate(path_to_video=Video1, target_fps=fps)
-            cap1 = cv2.VideoCapture(str(Video1))
-
-        elif fps_c2 > fps_c:
-            Video2 = convert_video_frame_rate(path_to_video=Video2, target_fps=fps)
-            cap2 = cv2.VideoCapture(str(Video2))
+    if int(fps_c) != DEFAULT_FRAME_RATE:
+        Video1 = convert_video_frame_rate(path_to_video=Video1, target_fps=fps)
+        cap1 = cv2.VideoCapture(str(Video1))
+    if int(fps_c2) != DEFAULT_FRAME_RATE:
+        Video2 = convert_video_frame_rate(path_to_video=Video2, target_fps=fps)
+        cap2 = cv2.VideoCapture(str(Video2))
 
     fourcc = cv2.VideoWriter_fourcc("m", "p", "4", "v")
-    videowriter = cv2.VideoWriter(str(target_file_path), fourcc, fps, size)
+    videowriter = None
 
-    for _ in tqdm.tqdm(range(int(num_frames))):
-        ret, frame1 = cap1.read()
-        ret, frame2 = cap2.read()
-        if frame1 is None or frame2 is None:
+    for i in tqdm.tqdm(range(max(num_frames_vid1, num_frames_vid2))):
+        # ret, frame1 = cap1.read()
+        # ret, frame2 = cap2.read()
+
+        if i < num_frames_vid1:
+            ret, frame1 = cap1.read()
+
+        if i < num_frames_vid2:
+            ret, frame2 = cap2.read()
+
+        if i == (max(num_frames_vid1, num_frames_vid2)):
             break
 
+        frame1pil = image_editor.convert_opencv_format_to_pil(frame1)
+        frame2pil = image_editor.convert_opencv_format_to_pil(frame2)
         if insert_subtitle:
-            frame1pil = image_editor.convert_opencv_format_to_pil(frame1)
-            frame2pil = image_editor.convert_opencv_format_to_pil(frame2)
             image_editor.insert_subtitle(img=frame1pil, text=Video1.stem)
             image_editor.insert_subtitle(img=frame2pil, text=Video2.stem)
 
-            frame1 = image_editor.convert_pil_to_opencv_format(frame1pil)
-            frame2 = image_editor.convert_pil_to_opencv_format(frame2pil)
+        img = image_editor.stitch_images_side_by_side([frame1pil, frame2pil])
+        if videowriter is None:
+            size = img.size
+            videowriter = cv2.VideoWriter(str(target_file_path), fourcc, fps, size)
+        img = image_editor.convert_pil_to_opencv_format(img)
 
-        img = stitch_video_frames(frame1, frame2, Video_w, Video_h, Video_w2, Video_h2)
-        img = cv2.resize(img, size, interpolation=cv2.INTER_AREA)
         videowriter.write(img)
         if cv2.waitKey(1) & 0xFF == ord("q"):
             cv2.destroyAllWindows()
