@@ -5,7 +5,7 @@ import tqdm
 
 import file_manager.file_manager as file_manager
 import image_editor
-from config import _tmp_dir_pathlib, prRed
+from config import DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE, _tmp_dir_pathlib, prRed
 
 
 def create_video_from_frames_in_dir(
@@ -46,7 +46,7 @@ def create_video_from_frames_in_dir(
                 img=img,
                 text=file_path.stem,
                 color="white",
-                subtitle_height_percentage=0.1,
+                subtitle_height_percentage=DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE,
             )
 
         img = image_editor.convert_pil_to_opencv_format(img=img)

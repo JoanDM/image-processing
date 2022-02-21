@@ -10,6 +10,7 @@ _resources_dir_pathlib = Path(_base_dir) / "resources"
 _tmp_dir_pathlib = _results_dir_pathlib / "tmp"
 
 DEFAULT_FRAME_RATE = 30
+DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE = 0.05
 
 DEFAULT_DPI = 300
 PRINTER_DPI = 1200
@@ -34,6 +35,7 @@ OPENCV_OBJECT_TRACKERS = {
     "kcf": cv2.TrackerKCF_create,
     "mil": cv2.TrackerMIL_create,
 }
+
 
 def prRed(skk):
     print("\033[91m{}\033[00m".format(skk))

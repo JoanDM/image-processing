@@ -47,9 +47,9 @@ def insert_timestamps_on_frame_sequence_in_dir(
         )
 
         image_editor.insert_subtitle(
-            img=img, text=frame_main_title, subtitle_height_percentage=0.1
+            img=img,
+            text=frame_main_title,
         )
-
         image_editor.save_img(
             img=img,
             target_file_name=f"{str(i).zfill(8)}",

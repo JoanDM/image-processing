@@ -4,6 +4,7 @@ import qrcode
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 import file_manager.file_manager as file_manager
+from config import DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE
 
 
 def open_image(path_to_img):
@@ -180,7 +181,7 @@ def insert_subtitle(
     img,
     text,
     color="white",
-    subtitle_height_percentage=0.1,
+    subtitle_height_percentage=DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE,
 ):
     position = [0, img.size[1]]
     anchor_point = "bottom_left"
@@ -244,7 +245,7 @@ def stitch_images_side_by_side(list_of_paths_to_images, insert_subtitles=False):
                 img=next_img,
                 text=img_pth.stem,
                 color="white",
-                subtitle_height_percentage=0.1,
+                subtitle_height_percentage=DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE,
             )
         comp_img.paste(next_img, (x_size_tracker, 0))
         x_size_tracker += next_img.size[0]
