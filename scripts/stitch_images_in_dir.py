@@ -20,7 +20,7 @@ if __name__ == "__main__":
     )
 
     parser.add_argument("-fname", nargs="?", help="name for the composition", type=str)
-    parser.add_argument("-nosubs", help="insert img subtitles", action="store_false")
+    parser.add_argument("-nosubs", help="insert img subtitles", action="store_true")
 
     args = parser.parse_args()
     target_dir = args.tdir
@@ -33,10 +33,17 @@ if __name__ == "__main__":
     if file_name is None:
         file_name = args.dir.stem
 
-    list_of_paths_to_images = file_manager.list_all_image_filepaths_in_dir(args.dir)
+    list_of_imgs = []
+
+    for img_path in file_manager.list_all_image_filepaths_in_dir(args.dir):
+        list_of_imgs.append(image_editor.open_image(img_path))
+    if args.nosubs:
+        list_of_subtitles = None
+    else:
+        list_of_subtitles = file_manager.list_all_image_filenames_in_dir(args.dir)
 
     comp = image_editor.stitch_images_side_by_side(
-        list_of_paths_to_images=list_of_paths_to_images, insert_subtitles=args.nosubs
+        list_of_imgs=list_of_imgs, list_of_subtitles=list_of_subtitles
     )
 
     image_editor.save_img(
