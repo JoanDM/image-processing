@@ -5,7 +5,12 @@ import tqdm
 
 import file_manager.file_manager as file_manager
 import image_editor
-from config import DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE, _tmp_dir_pathlib, prRed
+from config import (
+    DEFAULT_FRAME_RATE,
+    DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE,
+    _tmp_dir_pathlib,
+    prRed,
+)
 
 
 def create_video_from_frames_in_dir(
@@ -151,7 +156,7 @@ def stitch_list_of_videos_side_by_side(
     target_filename,
     target_directory,
     fps,
-    insert_subtitle=False,
+    list_of_subtitles=None,
 ):
     target_file_path = file_manager.find_new_unique_file_path(
         target_file_path=target_directory / f"{target_filename}.mp4"
@@ -165,8 +170,6 @@ def stitch_list_of_videos_side_by_side(
 
     fps_c = cap1.get(cv2.CAP_PROP_FPS)
     fps_c2 = cap2.get(cv2.CAP_PROP_FPS)
-    num_frames_vid1 = int(cap1.get(cv2.CAP_PROP_FRAME_COUNT))
-    num_frames_vid2 = int(cap2.get(cv2.CAP_PROP_FRAME_COUNT))
 
     if int(fps_c) != DEFAULT_FRAME_RATE:
         Video1 = convert_video_frame_rate(path_to_video=Video1, target_fps=fps)
@@ -174,6 +177,9 @@ def stitch_list_of_videos_side_by_side(
     if int(fps_c2) != DEFAULT_FRAME_RATE:
         Video2 = convert_video_frame_rate(path_to_video=Video2, target_fps=fps)
         cap2 = cv2.VideoCapture(str(Video2))
+
+    num_frames_vid1 = int(cap1.get(cv2.CAP_PROP_FRAME_COUNT))
+    num_frames_vid2 = int(cap2.get(cv2.CAP_PROP_FRAME_COUNT))
 
     fourcc = cv2.VideoWriter_fourcc("m", "p", "4", "v")
     videowriter = None
@@ -193,9 +199,9 @@ def stitch_list_of_videos_side_by_side(
 
         frame1pil = image_editor.convert_opencv_format_to_pil(frame1)
         frame2pil = image_editor.convert_opencv_format_to_pil(frame2)
-        if insert_subtitle:
-            image_editor.insert_subtitle(img=frame1pil, text=Video1.stem)
-            image_editor.insert_subtitle(img=frame2pil, text=Video2.stem)
+        if list_of_subtitles:
+            image_editor.insert_subtitle(img=frame1pil, text=list_of_subtitles[0])
+            image_editor.insert_subtitle(img=frame2pil, text=list_of_subtitles[1])
 
         img = image_editor.stitch_images_side_by_side([frame1pil, frame2pil])
         if videowriter is None:
