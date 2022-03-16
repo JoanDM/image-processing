@@ -168,15 +168,18 @@ def stitch_list_of_videos_side_by_side(
     cap1 = cv2.VideoCapture(str(Video1))
     cap2 = cv2.VideoCapture(str(Video2))
 
-    fps_c = cap1.get(cv2.CAP_PROP_FPS)
-    fps_c2 = cap2.get(cv2.CAP_PROP_FPS)
+    # fps_c = cap1.get(cv2.CAP_PROP_FPS)
+    # fps_c2 = cap2.get(cv2.CAP_PROP_FPS)
 
-    if int(fps_c) != DEFAULT_FRAME_RATE:
-        Video1 = convert_video_frame_rate(path_to_video=Video1, target_fps=fps)
-        cap1 = cv2.VideoCapture(str(Video1))
-    if int(fps_c2) != DEFAULT_FRAME_RATE:
-        Video2 = convert_video_frame_rate(path_to_video=Video2, target_fps=fps)
-        cap2 = cv2.VideoCapture(str(Video2))
+    Video1 = convert_video_frame_rate(
+        path_to_video=Video1, target_fps=DEFAULT_FRAME_RATE
+    )
+    cap1 = cv2.VideoCapture(str(Video1))
+
+    Video2 = convert_video_frame_rate(
+        path_to_video=Video2, target_fps=DEFAULT_FRAME_RATE
+    )
+    cap2 = cv2.VideoCapture(str(Video2))
 
     num_frames_vid1 = int(cap1.get(cv2.CAP_PROP_FRAME_COUNT))
     num_frames_vid2 = int(cap2.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -213,3 +216,6 @@ def stitch_list_of_videos_side_by_side(
         if cv2.waitKey(1) & 0xFF == ord("q"):
             cv2.destroyAllWindows()
             break
+
+    file_manager.move_file_to_trash(Video1)
+    file_manager.move_file_to_trash(Video2)
