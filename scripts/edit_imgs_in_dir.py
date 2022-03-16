@@ -8,7 +8,7 @@ import file_manager.file_manager as file_manager
 import image_editor
 
 
-def manipulate_img(img_path, target_output_dir=None):
+def edit_img(img_path, target_output_dir=None):
     file_name = img_path.stem
     img = image_editor.open_image(img_path)
 
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-tdir",
         nargs="?",
-        help="Target dir to store composition",
+        help="Target dir to store modified images",
         type=Path,
         default=None,
     )
@@ -48,6 +48,6 @@ if __name__ == "__main__":
     with futures.ProcessPoolExecutor() as pool:
         with tqdm(total=len(list_of_files)) as progressbar:
             for _ in pool.map(
-                manipulate_img, list_of_files, [target_dir] * len(list_of_files)
+                edit_img, list_of_files, [target_dir] * len(list_of_files)
             ):
                 progressbar.update(1)

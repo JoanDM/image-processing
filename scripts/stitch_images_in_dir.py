@@ -37,6 +37,7 @@ if __name__ == "__main__":
 
     for img_path in file_manager.list_all_image_filepaths_in_dir(args.dir):
         list_of_imgs.append(image_editor.open_image(img_path))
+
     if args.nosubs:
         list_of_subtitles = None
     else:

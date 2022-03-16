@@ -28,7 +28,7 @@ if __name__ == "__main__":
         default=DEFAULT_FRAME_RATE,
         type=int,
     )
-    parser.add_argument("-nosubs", help="insert img subtitles", action="store_false")
+    parser.add_argument("-nosubs", help="insert video subtitles", action="store_true")
 
     args = parser.parse_args()
     target_dir = args.tdir
@@ -42,6 +42,11 @@ if __name__ == "__main__":
     if file_name is None:
         file_name = args.dir.stem
 
+    if args.nosubs:
+        list_of_subtitles = None
+    else:
+        list_of_subtitles = file_manager.list_all_video_filenams_in_dir(args.dir)
+
     list_of_paths_to_videos = file_manager.list_all_video_filepaths_in_dir(args.dir)
 
     video_editor.stitch_list_of_videos_side_by_side(
@@ -49,5 +54,5 @@ if __name__ == "__main__":
         fps=frame_rate,
         target_filename=file_name,
         target_directory=target_dir,
-        insert_subtitle=args.nosubs,
+        list_of_subtitles=list_of_subtitles,
     )
