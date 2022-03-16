@@ -12,6 +12,13 @@ from config import prRed
 def insert_timestamps_on_frame_sequence_in_dir(
     list_of_files, target_directory, json_keyframes_file, fps
 ):
+    """Insert timestamps on a sequence of frames as a legend
+
+    :param list_of_files: List of paths to frames
+    :param target_directory: Path to store edited frames
+    :param json_keyframes_file: Path to JSON dict with keyframes
+    :param fps: Frame rate at which the frame sequence was captured
+    """
     # json_keyframes = JsonDataProcessor.load_json_file_content(json_keyframes_file)
     json_keyframes = file_manager.load_json_file_content(json_keyframes_file)
 

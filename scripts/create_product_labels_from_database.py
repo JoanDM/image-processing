@@ -17,6 +17,15 @@ def create_product_labels(
     product_serial_numbers,
     img_format="bmp",
 ):
+    """Create printable labels with QR codes to identify products in a database.
+
+    :param target_directory: Path to store created labels
+    :param target_file_name: Name for the created file with labels without suffix
+    :param product_names: List of product names
+    :param product_models: List of product models
+    :param product_serial_numbers: List of product serial numbers
+    :param img_format: Image format to save created labels, defaults to "bmp"
+    """
     # Specify label width and height
     label_width_cm, label_height_cm = (8, 3)
     label_width_inch, label_height_inch = (
@@ -33,7 +42,7 @@ def create_product_labels(
     # Create grid of labels, create additional files if they don't fit in a single A4
     i = 0
     j = 0
-    for index in range(len(product_names)):
+    for index in len(product_names):
         if i == 0 and j == 0:
             product_labels_img = image_editor.create_blank_image(
                 size=(A4_PIXEL_WIDTH_DEFAULT_DPI, A4_PIXEL_HEIGHT_DEFAULT_DPI)

@@ -3,11 +3,16 @@ from pathlib import Path
 import tqdm
 
 from config import _results_dir_pathlib, _tmp_dir_pathlib
-from image_editor_class import ImageEditor
-from video_editor_class import VideoEditor
+from image_editor import ImageEditor
+from video_editor import VideoEditor
 
 
 def extract_frames_and_insert_timestamps_from_video(path_to_video, target_directory):
+    """Extract frames and insert timestamps as a legend
+
+    :param path_to_video: Path to input video
+    :param target_directory: Path to store extracted frames
+    """
     video_editor = VideoEditor(_tmp_dir_pathlib)
 
     video_fps = video_editor.extract_frames_from_video(path_to_video)

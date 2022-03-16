@@ -9,6 +9,13 @@ from data_processing.data_processsor_class import JsonDataProcessor
 
 
 def navigate_frames_and_create_annotation(directory_path, tracker_type_str, target_dir):
+    """Launch a window to navigate through the frames in a directory. Draw a bounding box around the subject
+    of interest and run OpenCV algorithms to automatically store the coordinates of the box on every frame
+
+    :param directory_path: Path to directory with frames
+    :param tracker_type_str: OpenCV tracking algorithm to be used
+    :param target_dir: Path to directory to store bounding box coordinates as .json
+    """
     json_processor = JsonDataProcessor()
 
     list_of_filenames = sorted(directory_path.glob("*.png"))
@@ -48,7 +55,7 @@ def navigate_frames_and_create_annotation(directory_path, tracker_type_str, targ
             frame = cv2.imread(str(file_path))
 
             if frame is None:
-                return 0
+                break
 
             cv2.imshow("Frame viewer", frame)
 

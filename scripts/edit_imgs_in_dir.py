@@ -8,7 +8,16 @@ import file_manager.file_manager as file_manager
 import image_editor
 
 
-def edit_img(img_path, target_output_dir=None):
+def edit_img(img_path, target_output_dir):
+    """Custom method to modify an image as you wish. Since the scope is very broad, you should edit the script and tailor it to your objectives.
+    Some examples of the method capabilities:
+        - Rotate image
+        - Strip EXIF metadata
+
+
+    :param img_path: Path to input image
+    :param target_output_dir: Path to store edited image
+    """
     file_name = img_path.stem
     img = image_editor.open_image(img_path)
 

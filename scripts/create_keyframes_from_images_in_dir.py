@@ -9,6 +9,11 @@ from data_processing.data_processsor_class import JsonDataProcessor
 
 
 def navigate_frames_and_create_keyframes(directory_path, target_dir):
+    """Launch a window to navigate through the frames in a directory. Give a name to every fraction of the sequence with a dict of keyframes
+
+    :param directory_path: Path to directory with frames
+    :param target_dir: Path to directory to store keyframe names as .json
+    """
     json_processor = JsonDataProcessor()
     json_processor.json_dict = {}
     i = 0
@@ -40,7 +45,7 @@ def navigate_frames_and_create_keyframes(directory_path, target_dir):
             frame = cv2.imread(str(file_path))
 
             if frame is None:
-                return 0
+                break
 
             cv2.imshow("Frame viewer", frame)
 
@@ -109,24 +114,28 @@ def navigate_frames_and_create_keyframes(directory_path, target_dir):
         cv2.destroyAllWindows()
 
 
-def define_key_frame(json_processor, index):
+def define_key_frame(json_dict, frame_index):
+    """Create a new entry to a json dict for a specific key index.
+    If the entry is a key already present in the dictionary, copy the corresponding entry.
+
+    :param json_dict: Dict. key: int (frame index), val: str.
+    :param index: _description_
+    """
     keyframe_name = input(
         f"\nSet a name for the keyframe starting from "
-        f"frame #{index}\nPreviously defined keyframes:"
-        f"\n{json_processor.json_dict}\nIn case the keyframe is "
+        f"frame #{frame_index}\nPreviously defined keyframes:"
+        f"\n{json_dict}\nIn case the keyframe is "
         f"already in the list, you can simply type the "
         f"corresponding integer."
         f"\nPress Enter if you don't want to define a "
         f"keyframe\n>"
     )
     if keyframe_name.isdigit():
-        json_processor.insert_key_val_to_current_json_dict(
-            index, json_processor.json_dict[keyframe_name]
-        )
+        json_dict[frame_index] = json_dict[keyframe_name]
     elif keyframe_name == "":
         pass
     else:
-        json_processor.insert_key_val_to_current_json_dict(index, keyframe_name)
+        json_dict[frame_index] = keyframe_name
 
 
 if __name__ == "__main__":
