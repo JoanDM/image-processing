@@ -1,8 +1,9 @@
 import argparse
 from pathlib import Path
 
+import file_manager
 import video_editor
-from config import DEFAULT_FRAME_RATE
+from config import _default_frame_rate
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -19,7 +20,7 @@ if __name__ == "__main__":
         "-fps",
         nargs="?",
         help="target video frame rate",
-        default=DEFAULT_FRAME_RATE,
+        default=_default_frame_rate,
         type=int,
     )
     parser.add_argument(
@@ -50,6 +51,8 @@ if __name__ == "__main__":
         insert_subtitles=False,
     )
 
-    # prGreen(f"\n Done, video stored in {target_dir / video_name}")
+    file_manager.show_file(video)
+
+    # pr_green(f"\n Done, video stored in {target_dir / video_name}")
     # new = 2  # open in a new tab, if possible
     # webbrowser.open(f"file://{target_dir/video_name}", new=new)

@@ -7,7 +7,7 @@ import tqdm
 import file_manager.file_manager as file_manager
 import image_editor
 import video_editor
-from config import DEFAULT_FRAME_RATE
+from config import _default_frame_rate
 
 
 def edit_video(video_path, target_directory, target_filename):
@@ -23,7 +23,10 @@ def edit_video(video_path, target_directory, target_filename):
 
     # Insert any video operations here
     Video1 = video_editor.convert_video_frame_rate(
-        path_to_video=video_path, target_fps=DEFAULT_FRAME_RATE
+        path_to_video=video_path,
+        target_fps=_default_frame_rate,
+        target_directory=target_directory,
+        target_file_name=f"{video_path.stem}_{_default_frame_rate}fps{video_path.suffix}",
     )
     cap1 = cv2.VideoCapture(str(Video1))
     target_frame_rate = 10

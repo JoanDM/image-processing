@@ -5,12 +5,7 @@ import tqdm
 
 import file_manager.file_manager as file_manager
 import image_editor
-from config import (
-    DEFAULT_FRAME_RATE,
-    DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE,
-    _tmp_dir_pathlib,
-    prRed,
-)
+from config import _default_subtitle_height_percentage, _tmp_dir_pathlib, pr_red
 
 
 def create_video_from_frames_in_dir(
@@ -51,7 +46,7 @@ def create_video_from_frames_in_dir(
                 img=img,
                 text=file_path.stem,
                 color="white",
-                subtitle_height_percentage=DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE,
+                subtitle_height_percentage=_default_subtitle_height_percentage,
             )
 
         img = image_editor.convert_pil_to_opencv_format(img=img)
@@ -108,7 +103,7 @@ def cleanup_tmp_dir():
     try:
         [f.unlink() for f in _tmp_dir_pathlib.glob("*") if f.is_file()]
     except PermissionError:
-        prRed(
+        pr_red(
             f"Error when cleaning up {_tmp_dir_pathlib} "
             f"Check Full Disk Access settings on Mac"
         )

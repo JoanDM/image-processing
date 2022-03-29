@@ -5,41 +5,51 @@ import cv2
 
 _base_dir = os.path.abspath(os.path.dirname(__file__))
 _base_dir_pathlib = Path(_base_dir)
-_results_dir_pathlib = Path(_base_dir) / "results"
-_resources_dir_pathlib = Path(_base_dir) / "resources"
+_results_dir_pathlib = _base_dir_pathlib / "results"
+_resources_dir_pathlib = _base_dir_pathlib / "resources"
 _tmp_dir_pathlib = _results_dir_pathlib / "tmp"
+_ffmpeg_path = Path("/usr/local/bin/ffmpeg")
+_ffprobe_path = Path("/usr/local/bin/ffprobe")
+_default_font_path = Path("/System/Library/Fonts/SFNS.ttf")
+_1_minute_timer_video_path = _resources_dir_pathlib / "1min_b&w_timer.mp4"
 
-DEFAULT_FRAME_RATE = 30
-DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE = 0.05
+_default_frame_rate = 30
+_default_subtitle_height_percentage = 0.05
 
-DEFAULT_DPI = 300
-PRINTER_DPI = 1200
+_default_dpi = 300
+_printer_dpi = 1200
 
-A4_WIDTH_CM = 29.7
-A4_HEIGHT_CM = 21
+_a4_width_cm = 29.7
+_a4_height_cm = 21
 
-A4_WIDTH_BLEED_AREA_CM = 0.4
-A4_PIXEL_WIDTH_BLEED_AREA = int(DEFAULT_DPI * A4_WIDTH_BLEED_AREA_CM / 2.54)
+_a4_width_bleed_area_cm = 0.4
+_a4_pixel_width_bleed_area = int(_default_dpi * _a4_width_bleed_area_cm / 2.54)
 
 # For an A4 page, the size in pixels at 300dpi (without bleed area is (3508, 2480)
-A4_PIXEL_WIDTH_DEFAULT_DPI = (
-    int(DEFAULT_DPI * A4_WIDTH_CM / 2.54) - A4_PIXEL_WIDTH_BLEED_AREA * 2
-)
-A4_PIXEL_HEIGHT_DEFAULT_DPI = (
-    int(DEFAULT_DPI * A4_HEIGHT_CM / 2.54) - A4_PIXEL_WIDTH_BLEED_AREA * 2
-)
+# _a4_pixel_width_default_dpi = (
+#     int(_default_dpi * _a4_width_cm / 2.54) - _a4_pixel_width_bleed_area * 2
+# )
+# _a4_pixel_height_default_dpi = (
+#     int(_default_dpi * _a4_height_cm / 2.54) - _a4_pixel_width_bleed_area * 2
+# )
 
 
-OPENCV_OBJECT_TRACKERS = {
+_opencv_object_trackers = {
     "csrt": cv2.TrackerCSRT_create,
     "kcf": cv2.TrackerKCF_create,
     "mil": cv2.TrackerMIL_create,
 }
 
 
-def prRed(skk):
+def pr_red(skk):
+    """Convenient method to print red text in the console
+    :param skk: Text to output
+    """
     print("\033[91m{}\033[00m".format(skk))
 
 
-def prGreen(skk):
+def pr_green(skk):
+    """Convenient method to print green text in the console
+    :param skk: Text to output
+    """
     print("\033[92m{}\033[00m".format(skk))

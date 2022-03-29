@@ -6,7 +6,7 @@ import tqdm
 
 import file_manager.file_manager as file_manager
 import image_editor
-from config import prRed
+from config import pr_red
 
 
 def insert_timestamps_on_frame_sequence_in_dir(
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     except IndexError:
         fps = int(
             input(
-                prRed(
+                pr_red(
                     "Warning, original frame rate was not found in filename"
                     "Knowing the correct frame rate is critical for proper"
                     "time measurements. Enter the target FPS below\n>"

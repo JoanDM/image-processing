@@ -4,7 +4,7 @@ from pathlib import Path
 import cv2
 
 import file_manager.file_manager as file_manager
-from config import prGreen
+from config import pr_green
 from data_processing.data_processsor_class import JsonDataProcessor
 
 
@@ -107,7 +107,7 @@ def navigate_frames_and_create_keyframes(directory_path, target_dir):
             target_directory=target_dir,
             print_output_file_path=True,
         )
-        prGreen(f"Success! The following key frames were stored:")
+        pr_green(f"Success! The following key frames were stored:")
         json_processor.print_current_json_dict_content()
 
     except KeyboardInterrupt:

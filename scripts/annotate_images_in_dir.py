@@ -4,7 +4,7 @@ from pathlib import Path
 import cv2
 
 import file_manager.file_manager as file_manager
-from config import OPENCV_OBJECT_TRACKERS
+from config import _opencv_object_trackers
 from data_processing.data_processsor_class import JsonDataProcessor
 
 
@@ -60,7 +60,7 @@ def navigate_frames_and_create_annotation(directory_path, tracker_type_str, targ
             cv2.imshow("Frame viewer", frame)
 
             if initBB is not None and i == 0:
-                tracker = OPENCV_OBJECT_TRACKERS[tracker_type_str]()
+                tracker = _opencv_object_trackers[tracker_type_str]()
                 tracker.init(frame, initBB)
 
             if initBB is not None:
@@ -134,7 +134,7 @@ def navigate_frames_and_create_annotation(directory_path, tracker_type_str, targ
 
                 cv2.destroyWindow("Draw Bounding Box")
 
-                tracker = OPENCV_OBJECT_TRACKERS[tracker_type_str]()
+                tracker = _opencv_object_trackers[tracker_type_str]()
                 tracker.init(frame, initBB)
                 cv2.setWindowProperty("Frame viewer", cv2.WND_PROP_TOPMOST, 1)
 

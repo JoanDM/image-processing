@@ -4,7 +4,7 @@ import qrcode
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 import file_manager.file_manager as file_manager
-from config import DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE
+from config import _default_subtitle_height_percentage
 
 
 def open_image(path_to_img):
@@ -240,14 +240,14 @@ def insert_subtitle(
     img,
     text,
     color="white",
-    subtitle_height_percentage=DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE,
+    subtitle_height_percentage=_default_subtitle_height_percentage,
 ):
     """Insert subtitle to PIL image, by default a black background covering all image width will be introduced
 
     :param img: PIL instance of image
     :param text: String to insert
     :param color: defaults to "white"
-    :param subtitle_height_percentage: Height percentage of the image occupied as a subtitle overlay, defaults to DEFAULT_SUBTITLE_HEIGHT_PERCENTAGE
+    :param subtitle_height_percentage: Height percentage of the image occupied as a subtitle overlay, defaults to _default_subtitle_height_percentage
     """
     position = [0, img.size[1]]
     anchor_point = "bottom_left"

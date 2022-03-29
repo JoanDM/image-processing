@@ -1,9 +1,8 @@
 import argparse
 from pathlib import Path
 
-import file_manager.file_manager as file_manager
 import video_editor
-from config import DEFAULT_FRAME_RATE
+from file_manager import file_manager
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

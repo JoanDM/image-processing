@@ -1,8 +1,8 @@
 import image_editor
 from config import (
-    A4_PIXEL_HEIGHT_DEFAULT_DPI,
-    A4_PIXEL_WIDTH_DEFAULT_DPI,
-    DEFAULT_DPI,
+    _a4_pixel_height_default_dpi,
+    _a4_pixel_width_default_dpi,
+    _default_dpi,
     _resources_dir_pathlib,
     _results_dir_pathlib,
 )
@@ -33,11 +33,11 @@ def create_product_labels(
         label_height_cm / 2.54,
     )
 
-    label_width_px = int(DEFAULT_DPI * label_width_inch)
-    label_height_px = int(DEFAULT_DPI * label_height_inch)
+    label_width_px = int(_default_dpi * label_width_inch)
+    label_height_px = int(_default_dpi * label_height_inch)
 
-    max_label_rows = int(A4_PIXEL_HEIGHT_DEFAULT_DPI / label_height_px)
-    max_label_cols = int(A4_PIXEL_WIDTH_DEFAULT_DPI / label_width_px)
+    max_label_rows = int(_a4_pixel_height_default_dpi / label_height_px)
+    max_label_cols = int(_a4_pixel_width_default_dpi / label_width_px)
 
     # Create grid of labels, create additional files if they don't fit in a single A4
     i = 0
@@ -45,7 +45,7 @@ def create_product_labels(
     for index in len(product_names):
         if i == 0 and j == 0:
             product_labels_img = image_editor.create_blank_image(
-                size=(A4_PIXEL_WIDTH_DEFAULT_DPI, A4_PIXEL_HEIGHT_DEFAULT_DPI)
+                size=(_a4_pixel_width_default_dpi, _a4_pixel_height_default_dpi)
             )
 
         if i == max_label_rows:
@@ -59,7 +59,7 @@ def create_product_labels(
                 target_file_name=target_file_name,
                 target_directory=target_directory,
                 img_format=img_format,
-                dpi=(DEFAULT_DPI, DEFAULT_DPI),
+                dpi=(_default_dpi, _default_dpi),
             )
 
         # Draw label rectangle
@@ -98,7 +98,7 @@ def create_product_labels(
 
         desired_qr_code_width_pix = (label_width_px - max_text_width_pix) * 0.8
 
-        qr_code_w, h = qr_img.size
+        qr_code_w, _ = qr_img.size
 
         barcode_resizing_factor = desired_qr_code_width_pix / qr_code_w
 
@@ -122,7 +122,7 @@ def create_product_labels(
         target_file_name=target_file_name,
         target_directory=target_directory,
         img_format=img_format,
-        dpi=(DEFAULT_DPI, DEFAULT_DPI),
+        dpi=(_default_dpi, _default_dpi),
     )
 
 
