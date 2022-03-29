@@ -132,18 +132,20 @@ if __name__ == "__main__":
         _resources_dir_pathlib / "example_product_database.csv"
     )
 
-    target_directory = _results_dir_pathlib
-    target_filename = "example_product_labels"
-    product_names = dataprocessor.get_list_of_all_elements_in_column("Product Name")
-    product_models = dataprocessor.get_list_of_all_elements_in_column("Product Model")
-    product_serial_numbers = dataprocessor.get_list_of_all_elements_in_column(
+    target_dir = _results_dir_pathlib
+    target_file_name = "example_product_labels"
+    product_name_list = dataprocessor.get_list_of_all_elements_in_column("Product Name")
+    product_model_list = dataprocessor.get_list_of_all_elements_in_column(
+        "Product Model"
+    )
+    product_serial_number_list = dataprocessor.get_list_of_all_elements_in_column(
         "Product Serial Number"
     )
 
     create_product_labels(
-        target_directory,
-        target_filename,
-        product_names,
-        product_models,
-        product_serial_numbers,
+        target_dir,
+        target_file_name,
+        product_name_list,
+        product_model_list,
+        product_serial_number_list,
     )

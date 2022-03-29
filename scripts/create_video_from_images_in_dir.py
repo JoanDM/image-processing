@@ -41,7 +41,7 @@ if __name__ == "__main__":
     if video_name is None:
         video_name = args.dir.stem
 
-    video_editor.create_video_from_frames_in_dir(
+    video = video_editor.create_video_from_frames_in_dir(
         path_to_directory=args.dir,
         target_directory=target_dir,
         target_video_name=video_name,

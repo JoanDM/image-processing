@@ -22,8 +22,9 @@ def edit_img(img_path, target_output_dir):
     img = image_editor.open_image(img_path)
 
     # Insert any image operations here
-    img = image_editor.rotate(img, angle_deg=90)
+    img = img.rotate(angle=90, expand=True)
     img = image_editor.strip_exif(img)
+    img = image_editor.invert(img)
 
     # Save file
     image_editor.save_img(
