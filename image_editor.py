@@ -348,3 +348,41 @@ def create_qr_code_image(code_content):
     :return: PIL instance of QR code
     """
     return qrcode.make(code_content)
+
+
+def find_best_font_size(text, max_width_pix, max_height_pix):
+    # Initialize font size
+    font_size = 100
+    from config import _default_font_path
+
+    font = ImageFont.truetype(str(_default_font_path), font_size)
+
+    w, h = font.getsize(text)
+    # This value would override the font size
+    while h >= max_height_pix:
+        font_size -= 1
+        font = ImageFont.truetype(str(_default_font_path), font_size)
+        w, h = font.getsize(text)
+
+    while h <= max_height_pix:
+        font_size += 1
+        font = ImageFont.truetype(str(_default_font_path), font_size)
+        w, h = font.getsize(text)
+
+    if w > max_width_pix:
+        text_fits_in_rectangle = False
+    else:
+        text_fits_in_rectangle = True
+
+    if not text_fits_in_rectangle:
+        while w >= max_width_pix:
+            font_size -= 1
+            font = ImageFont.truetype(str(_default_font_path), font_size)
+            w, h = font.getsize(text)
+
+        while w <= max_width_pix:
+            font_size += 1
+            font = ImageFont.truetype(str(_default_font_path), font_size)
+            w, h = font.getsize(text)
+
+    return font_size
