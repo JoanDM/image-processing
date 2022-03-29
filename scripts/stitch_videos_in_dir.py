@@ -21,17 +21,24 @@ if __name__ == "__main__":
 
     parser.add_argument("-fname", nargs="?", help="name for the composition", type=str)
     parser.add_argument(
-        "-fps",
+        "-smf",
         nargs="?",
-        help="target video frame rate",
-        default=DEFAULT_FRAME_RATE,
+        help="Slow-motion factor",
+        default=None,
+        type=int,
+    )
+    parser.add_argument(
+        "-fd",
+        nargs="?",
+        help="Last frame freezing duration in seconds",
+        default=0,
         type=int,
     )
     parser.add_argument("-nosubs", help="insert video subtitles", action="store_true")
 
     args = parser.parse_args()
     target_dir = args.tdir
-    frame_rate = args.fps
+    slow_mo_factor = args.smf
     file_name = args.fname
 
     if target_dir is None:
@@ -50,8 +57,9 @@ if __name__ == "__main__":
 
     video_editor.stitch_list_of_videos_side_by_side(
         list_of_paths_to_videos=list_of_paths_to_videos,
-        fps=frame_rate,
+        slow_mo_factor=slow_mo_factor,
         target_filename=file_name,
         target_directory=target_dir,
         list_of_subtitles=list_of_subtitles,
+        last_frame_freeze_duration=args.fd,
     )
