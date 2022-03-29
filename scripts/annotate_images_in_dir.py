@@ -183,12 +183,12 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    target_dir = args.tdir
+    target_directory = args.tdir
 
-    if target_dir is None:
-        target_dir = args.dir.parents[0] / f"{args.dir.stem}_frame_annotations"
-        file_manager.create_directory(target_dir)
+    if target_directory is None:
+        target_directory = args.dir.parents[0] / f"{args.dir.stem}_frame_annotations"
+        file_manager.create_directory(target_directory)
 
     navigate_frames_and_create_annotation(
-        directory_path=args.dir, tracker_type_str="csrt", target_dir=target_dir
+        directory_path=args.dir, tracker_type_str="csrt", target_dir=target_directory
     )
