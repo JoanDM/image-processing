@@ -103,7 +103,7 @@ def extract_frames_from_video(path_to_video, target_directory, frame_prefix=""):
     # Loop through the video to get the number of frames
     total_number_of_frames = 0
     while vidcap.isOpened():
-        frame_exists, frame = vidcap.read()
+        frame_exists, _ = vidcap.read()
         if frame_exists:
             total_number_of_frames += 1
         else:
@@ -120,7 +120,7 @@ def extract_frames_from_video(path_to_video, target_directory, frame_prefix=""):
             target_directory
             / f"{f'{frame_prefix}_' if frame_prefix else ''}{str(count).zfill(8)}.png"
         )
-        success, image = vidcap.read()
+        _, image = vidcap.read()
         cv2.imwrite(str(file_name), image)
         count += 1
 
@@ -165,20 +165,12 @@ def convert_video_frame_rate(
     return output_video_path
 
 
-# function for combined two frames.
-def stitch_video_frames(frame1, frame2, Video_w, Video_h, Video_w2, Video_h2):
-    frame2 = cv2.resize(
-        frame2, (int(Video_w2), int(Video_h)), interpolation=cv2.INTER_AREA
-    )
-    BG = cv2.resize(
-        frame1, (int(Video_w + Video_w2), int(Video_h)), interpolation=cv2.INTER_AREA
-    )
-    BG[0 : int(Video_h), 0 : int(Video_w)] = frame1
-    BG[0 : int(Video_h), int(Video_w) : int(Video_w + Video_w2)] = frame2
-    return BG
-
-
 def get_video_length_in_sec(path_to_video):
+    """Get video duration in seconds
+
+    :param path_to_video: Path to video
+    :return: Video duration in seconds (float)
+    """
     video_length = float(
         subprocess.check_output(
             [
@@ -192,6 +184,11 @@ def get_video_length_in_sec(path_to_video):
 
 
 def get_video_size(path_to_video):
+    """Get video height and width through ffprobe
+
+    :param path_to_video: Path to video
+    :return: Tuple (video_w, video_h) in pixels
+    """
     video_w = int(
         subprocess.check_output(
             [
@@ -214,6 +211,16 @@ def get_video_size(path_to_video):
 def crop_video(
     path_to_video, target_filename, target_directory, target_width, target_height, x, y
 ):
+    """Crop video through FFMPEG commands
+
+    :param path_to_video: Path to video
+    :param target_filename: Target name for cropped video
+    :param target_directory: Target directory to store cropped video
+    :param target_width: Target final video width
+    :param target_height: Target final video height
+    :param x: X coordinate for top left corner for cropping box
+    :param y: y coordinate for top left corner for cropping box
+    """
     target_file_path = file_manager.find_new_unique_file_path(
         target_file_path=target_directory / f"{target_filename}.mp4"
     )
@@ -290,8 +297,8 @@ def stitch_list_of_videos_side_by_side(
     )
     ffmpeg_complex_filter += ffmpeg_stack_filter
 
-    # Insert a black banner at the bottom of the composition and insert video subtitles to identify every
-    # single input video
+    # Insert a black banner at the bottom of the composition and insert video subtitles
+    # to identify every single input video
 
     text_box_opacity = 1.0
     text_height_percentage = _default_subtitle_height_percentage
@@ -353,6 +360,19 @@ def stitch_list_of_videos_side_by_side(
         ],
         shell=True,
     )
+
+
+# # function for combined two frames.
+# def stitch_video_frames_opencv(frame1, frame2, Video_w, Video_h, Video_w2, Video_h2):
+#     frame2 = cv2.resize(
+#         frame2, (int(Video_w2), int(Video_h)), interpolation=cv2.INTER_AREA
+#     )
+#     BG = cv2.resize(
+#         frame1, (int(Video_w + Video_w2), int(Video_h)), interpolation=cv2.INTER_AREA
+#     )
+#     BG[0 : int(Video_h), 0 : int(Video_w)] = frame1
+#     BG[0 : int(Video_h), int(Video_w) : int(Video_w + Video_w2)] = frame2
+#     return BG
 
 
 # def stitch_list_of_videos_side_by_side_opencv(
