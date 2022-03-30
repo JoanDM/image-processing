@@ -3,7 +3,6 @@ import subprocess
 import cv2
 import tqdm
 
-import file_manager.file_manager as file_manager
 import image_editor
 from config import (
     _1_minute_timer_video_path,
@@ -14,6 +13,7 @@ from config import (
     _tmp_dir_pathlib,
     pr_red,
 )
+from file_manager import file_manager
 
 
 def create_video_from_frames_in_dir(
