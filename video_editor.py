@@ -6,6 +6,7 @@ import tqdm
 import file_manager.file_manager as file_manager
 import image_editor
 from config import (
+    _1_minute_timer_video_path,
     _default_font_path,
     _default_subtitle_height_percentage,
     _ffmpeg_path,
@@ -231,112 +232,114 @@ def stitch_list_of_videos_side_by_side(
     target_directory,
     slow_mo_factor,
     last_frame_freeze_duration,
-    list_of_subtitles=None,
+    insert_timers,
+    list_of_subtitles,
 ):
-    """Create a video composition of side by side videos. The script will construct the necessary FFMPEG command line program
+    """Create a video composition of side by side videos. The script will construct and execute necessary FFMPEG command line program
 
     :param list_of_paths_to_videos: List ot paths to videos to stitch together, sorted from left to right
     :param target_filename: Target name for the composition
     :param target_directory: Target directory to store video composition
     :param slow_mo_factor: Factor for video slow-down
-    :param list_of_subtitles: List of subtitles to set below every video, defaults to None
+    :param last_frame_freeze_duration: How long should the last composition frame stay frozen
+    :param insert_timers: Insert a timer at the top-left side of every video
+    :param list_of_subtitles: List of subtitles to set below every video
     """
-    insert_timers = True
-    from config import _1_minute_timer_video_path
-
-    # Construct FFMPEG command for input videos
-    ffmpeg_input_videos = ""
-    for video_path in list_of_paths_to_videos:
-        ffmpeg_input_videos += f"-i '{video_path}' "
-
     max_duration = 0
     duration_list = []
+    ffmpeg_input_videos = ""
+    # Final composition height is based on first video size
+    _, final_video_h = get_video_size(list_of_paths_to_videos[0])
+
+    # Examine input videos
     for video_path in list_of_paths_to_videos:
+        # Construct FFMPEG command for input videos
+        ffmpeg_input_videos += f"-i '{video_path}' "
+        # Collect the video lenghts to properly trim and cut composition
         vid_duration = get_video_length_in_sec(video_path)
         duration_list.append(vid_duration)
-        max_duration = max(max_duration, vid_duration) + last_frame_freeze_duration
+        max_duration = (
+            max(max_duration, vid_duration)
+            + last_frame_freeze_duration / slow_mo_factor
+        )
 
-    # Initialize black padding sources to be placed in between videos.
-    # All is done by constructing FFMPEG complex filters
+    # The following actions are done by constructing FFMPEG complex filters
     ffmpeg_complex_filter = ""
-    _, final_video_h = get_video_size(list_of_paths_to_videos[0])
+
+    # Video scaling
+    for i in range(len(list_of_paths_to_videos)):
+        # All videos must be scaled to match first input video height
+        ffmpeg_complex_filter += f"[{i}:v]scale=-1:{final_video_h}[v{i}];"
+        if insert_timers:
+            # Scale and set durations for timers
+            timer_height = int(final_video_h * _default_subtitle_height_percentage)
+            ffmpeg_input_videos += f" -i '{_1_minute_timer_video_path}'"
+            ffmpeg_complex_filter += f"[{len(list_of_paths_to_videos) + i}:v]scale=-1:{timer_height}[timer{i}];[timer{i}]trim=duration={duration_list[i]}[timer{i}];"
+
+    # Construct the horizontal video stack layout with padding inbetween videos
     padding_width = 20
+    ffmpeg_stack_filter = ""
     for i in range(len(list_of_paths_to_videos) - 1):
         ffmpeg_complex_filter += f"color=black:{padding_width}x{final_video_h}:d={max_duration}[blackpad{i}];"
-
-    # All videos must be scaled to match first input video height
-    for i in range(len(list_of_paths_to_videos)):
-        ffmpeg_complex_filter += f"[{i}:v]scale=-1:{final_video_h}[v{i}];"
-
-    if insert_timers:
-        if insert_timers:
-            for i in range(len(list_of_paths_to_videos)):
-                timer_height = int(final_video_h * _default_subtitle_height_percentage)
-                ffmpeg_input_videos += f" -i '{_1_minute_timer_video_path}'"
-                ffmpeg_complex_filter += f"[{len(list_of_paths_to_videos) + i}:v]scale=-1:{timer_height}[timer{i}];[timer{i}]trim=duration={duration_list[i]}[timer{i}];"
-
-    # Here we construct the horizontal stack layout, with or without padding
-
-    for i in range(len(list_of_paths_to_videos) - 1):
-        ffmpeg_complex_filter += f"[v{i}][blackpad{i}]"
+        ffmpeg_stack_filter += f"[v{i}][blackpad{i}]"
     i += 1
-    ffmpeg_complex_filter += (
+    ffmpeg_stack_filter += (
         f"[v{i}]hstack=inputs={len(list_of_paths_to_videos)*2-1}[composition];"
     )
-
-    # Slow down the final composition by x factor
-    if slow_mo_factor:
-        ffmpeg_complex_filter += f"[composition]setpts={float(slow_mo_factor)}*PTS;"
+    ffmpeg_complex_filter += ffmpeg_stack_filter
 
     # Insert a black banner at the bottom of the composition and insert video subtitles to identify every
     # single input video
-    if list_of_subtitles:
-        text_box_opacity = 1.0
-        text_height_percentage = _default_subtitle_height_percentage
-        ffmpeg_complex_filter += f"[composition]drawbox=x=0:y=ih-h:w=iw:h=ih*{text_height_percentage}:color=black@{text_box_opacity}:t=fill"
-        _, final_video_h = get_video_size(list_of_paths_to_videos[0])
 
-        normalized_font_size = 1000
-        for i, subtitle_text in enumerate(list_of_subtitles):
-            input_video_w, input_video_h = get_video_size(list_of_paths_to_videos[i])
-            # If input video had to be rescaled, find resulting w after scaling
+    text_box_opacity = 1.0
+    text_height_percentage = _default_subtitle_height_percentage
+    ffmpeg_complex_filter += f"[composition]drawbox=x=0:y=ih-h:w=iw:h=ih*{text_height_percentage}:color=black@{text_box_opacity}:t=fill"
+    normalized_font_size = 1000
+    for i, subtitle_text in enumerate(list_of_subtitles):
+        input_video_w, input_video_h = get_video_size(list_of_paths_to_videos[i])
+        # If input video had to be rescaled, find resulting w after scaling
 
-            subtitle_text = subtitle_text.replace(" ", "\ ")
-            if input_video_h != final_video_h:
-                input_video_w = input_video_w / input_video_h * final_video_h
-            font_size = image_editor.find_best_font_size(
-                subtitle_text, input_video_w, text_height_percentage * final_video_h
-            )
-            normalized_font_size = min(normalized_font_size, font_size)
-        video_width_tracker = 0
-        for i, subtitle_text in enumerate(list_of_subtitles):
-            subtitle_text = subtitle_text.replace(" ", "\ ")
-            ffmpeg_complex_filter += f",drawtext=fontfile={_default_font_path}:text='{subtitle_text}':fontcolor=white:fontsize={normalized_font_size}:x={video_width_tracker}+{input_video_w}/2-text_w/2:y=h-text_h-10"
-            video_width_tracker += input_video_w + padding_width
-
-    ffmpeg_complex_filter += "[composition];"
-
-    # Merge audio
-    if slow_mo_factor is None:
-        ffmpeg_complex_filter += f"amix=inputs={len(list_of_paths_to_videos)};"
-        audio_option = "-ac 2"
-    elif slow_mo_factor <= 2:
-        ffmpeg_complex_filter += f"amix=inputs={len(list_of_paths_to_videos)},atempo={float(1/slow_mo_factor)};"
-        audio_option = "-ac 2"
-    else:
-        audio_option = "-an"
+        subtitle_text = subtitle_text.replace(" ", "\ ")
+        if input_video_h != final_video_h:
+            input_video_w = input_video_w / input_video_h * final_video_h
+        font_size = image_editor.find_best_font_size(
+            subtitle_text, input_video_w, text_height_percentage * final_video_h
+        )
+        normalized_font_size = min(normalized_font_size, font_size)
+    video_width_tracker = 0
+    for i, subtitle_text in enumerate(list_of_subtitles):
+        subtitle_text = subtitle_text.replace(" ", "\ ")
+        ffmpeg_complex_filter += f",drawtext=fontfile={_default_font_path}:text='{subtitle_text}':fontcolor=white:fontsize={normalized_font_size}:x={video_width_tracker}+{input_video_w}/2-text_w/2:y=h-text_h-10"
+        video_width_tracker += input_video_w + padding_width
 
     if insert_timers:
         video_width_tracker = 0
         for i in range(len(list_of_paths_to_videos) - 1):
-            ffmpeg_complex_filter += f"[composition][timer{i}]overlay={video_width_tracker}:{0}[composition];"
+            ffmpeg_complex_filter += f"[composition];[composition][timer{i}]overlay={video_width_tracker}:{0}[composition]"
 
             input_video_w, input_video_h = get_video_size(list_of_paths_to_videos[i])
             video_width_tracker += input_video_w + padding_width
         i += 1
         ffmpeg_complex_filter += (
-            f"[composition][timer{i}]overlay={video_width_tracker}:{0}"
+            f";[composition][timer{i}]overlay={video_width_tracker}:{0}"
         )
+
+    # Slow down the final composition by x factor
+    if slow_mo_factor:
+        ffmpeg_complex_filter += (
+            f"[composition];[composition]setpts={float(slow_mo_factor)}*PTS"
+        )
+        if slow_mo_factor <= 2:
+            ffmpeg_complex_filter += f";amix=inputs={len(list_of_paths_to_videos)},atempo={float(1/slow_mo_factor)}"
+            audio_option = "-ac 2"
+        else:
+            pr_red(
+                "Warning, slow mo factor is greater than two, audio will be removed since it's not possible to slow down >2"
+            )
+            audio_option = "-an"
+    else:
+        ffmpeg_complex_filter += f";amix=inputs={len(list_of_paths_to_videos)}"
+        audio_option = "-ac 2"
 
     target_file_path = file_manager.find_new_unique_file_path(
         target_file_path=target_directory / f"{target_filename}.mp4"

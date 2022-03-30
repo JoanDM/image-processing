@@ -34,7 +34,7 @@ if __name__ == "__main__":
         default=0,
         type=int,
     )
-    parser.add_argument("-nosubs", help="insert video subtitles", action="store_true")
+    parser.add_argument("-timers", help="insert timers", action="store_true")
 
     args = parser.parse_args()
     target_dir = args.tdir
@@ -48,10 +48,7 @@ if __name__ == "__main__":
     if file_name is None:
         file_name = args.dir.stem
 
-    if args.nosubs:
-        list_of_subtitles = None
-    else:
-        list_of_subtitles = file_manager.list_all_video_filenams_in_dir(args.dir)
+    list_of_subtitles = file_manager.list_all_video_filenams_in_dir(args.dir)
 
     list_of_paths_to_videos = file_manager.list_all_video_filepaths_in_dir(args.dir)
 
@@ -62,4 +59,5 @@ if __name__ == "__main__":
         target_directory=target_dir,
         list_of_subtitles=list_of_subtitles,
         last_frame_freeze_duration=args.fd,
+        insert_timers=args.timers,
     )
