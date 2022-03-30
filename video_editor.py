@@ -234,6 +234,7 @@ def stitch_list_of_videos_side_by_side(
     last_frame_freeze_duration,
     insert_timers,
     list_of_subtitles,
+    remove_audio,
 ):
     """Create a video composition of side by side videos. The script will construct and execute necessary FFMPEG command line program
 
@@ -244,6 +245,7 @@ def stitch_list_of_videos_side_by_side(
     :param last_frame_freeze_duration: How long should the last composition frame stay frozen
     :param insert_timers: Insert a timer at the top-left side of every video
     :param list_of_subtitles: List of subtitles to set below every video
+    :param remove_audio: Remove audio from final composition
     """
     max_duration = 0
     duration_list = []
@@ -325,7 +327,7 @@ def stitch_list_of_videos_side_by_side(
         )
 
     # Slow down the final composition by x factor
-    if slow_mo_factor:
+    if slow_mo_factor and not remove_audio:
         ffmpeg_complex_filter += (
             f"[composition];[composition]setpts={float(slow_mo_factor)}*PTS"
         )

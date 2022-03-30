@@ -35,6 +35,9 @@ if __name__ == "__main__":
         type=int,
     )
     parser.add_argument("-timers", help="insert timers", action="store_true")
+    parser.add_argument(
+        "-noaudio", help="remove audio from final composition", action="store_true"
+    )
 
     args = parser.parse_args()
     target_dir = args.tdir
@@ -60,4 +63,5 @@ if __name__ == "__main__":
         list_of_subtitles=list_of_subtitles,
         last_frame_freeze_duration=args.fd,
         insert_timers=args.timers,
+        remove_audio=args.noaudio,
     )
