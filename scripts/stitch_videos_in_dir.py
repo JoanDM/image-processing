@@ -24,7 +24,7 @@ if __name__ == "__main__":
         "-smf",
         nargs="?",
         help="Slow-motion factor",
-        default=None,
+        default=1,
         type=int,
     )
     parser.add_argument(
@@ -41,7 +41,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     target_dir = args.tdir
-    slow_mo_factor = args.smf
     file_name = args.fname
 
     if target_dir is None:
@@ -57,7 +56,7 @@ if __name__ == "__main__":
 
     video_editor.stitch_list_of_videos_side_by_side(
         list_of_paths_to_videos=list_of_paths_to_videos,
-        slow_mo_factor=slow_mo_factor,
+        slow_mo_factor=args.smf,
         target_filename=file_name,
         target_directory=target_dir,
         list_of_subtitles=list_of_subtitles,

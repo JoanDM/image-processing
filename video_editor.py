@@ -334,21 +334,18 @@ def stitch_list_of_videos_side_by_side(
         )
 
     # Slow down the final composition by x factor
-    if slow_mo_factor and not remove_audio:
-        ffmpeg_complex_filter += (
-            f"[composition];[composition]setpts={float(slow_mo_factor)}*PTS"
-        )
+    ffmpeg_complex_filter += (
+        f"[composition];[composition]setpts={float(slow_mo_factor)}*PTS"
+    )
+    if not remove_audio:
         if slow_mo_factor <= 2:
             ffmpeg_complex_filter += f";amix=inputs={len(list_of_paths_to_videos)},atempo={float(1/slow_mo_factor)}"
             audio_option = "-ac 2"
-        else:
-            pr_red(
-                "Warning, slow mo factor is greater than two, audio will be removed since it's not possible to slow down >2"
-            )
-            audio_option = "-an"
     else:
-        ffmpeg_complex_filter += f";amix=inputs={len(list_of_paths_to_videos)}"
-        audio_option = "-ac 2"
+        pr_red(
+            "Warning, slow mo factor is greater than two, audio will be removed since it's not possible to slow down >2"
+        )
+        audio_option = "-an"
 
     target_file_path = file_manager.find_new_unique_file_path(
         target_file_path=target_directory / f"{target_filename}.mp4"
